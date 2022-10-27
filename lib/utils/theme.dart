@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 const PRIMARY_COLOR = Color.fromRGBO(7, 28, 145, 0.95);
 // ignore: constant_identifier_names
 const SECONDARY_COLOR = Color.fromRGBO(165, 193, 199, 1);
+const WHITE_COLOR = Color.fromRGBO(255, 255, 255, 1);
+const FONT_COLOR = Color.fromRGBO(0, 0, 0, 1);
 
 ThemeData darkTheme() {
   final ThemeData darkTheme = ThemeData.dark();
