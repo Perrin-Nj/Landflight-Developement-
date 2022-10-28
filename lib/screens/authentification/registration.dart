@@ -19,7 +19,7 @@ class _RegisterState extends State<Register> {
       body: ListView(
         padding: EdgeInsets.only(left: 16, right: 16, top: 60),
         children: [
-          SafeArea(
+          const SafeArea(
               child: Padding(
             padding: EdgeInsets.only(left: 32),
             child: Text(
@@ -28,7 +28,7 @@ class _RegisterState extends State<Register> {
                   color: FONT_COLOR, fontSize: 30, fontFamily: "Bold"),
             ),
           )),
-          SizedBox(
+          const SizedBox(
             height: 32,
           ),
           Input(
@@ -36,7 +36,7 @@ class _RegisterState extends State<Register> {
               hintText: "Nom",
               suffixIcon: "assets/images/_.png",
               prefixIcon: "assets/images/image 11 (1).png"),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Input(
@@ -44,7 +44,7 @@ class _RegisterState extends State<Register> {
               hintText: "Email",
               suffixIcon: "assets/images/_.png",
               prefixIcon: "assets/images/image 4.png"),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Input(
@@ -52,7 +52,7 @@ class _RegisterState extends State<Register> {
               hintText: "Mot de passe",
               suffixIcon: "assets/images/_.png",
               prefixIcon: "assets/images/image 1.png"),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Input(
@@ -60,26 +60,26 @@ class _RegisterState extends State<Register> {
               hintText: "Téléphone",
               suffixIcon: "assets/images/_.png",
               prefixIcon: "assets/images/image 1.png"),
-          Text(
+          const Text(
             "J’ai oublié mon mot de passe",
             textAlign: TextAlign.right,
             style: TextStyle(
                 color: PRIMARY_COLOR, fontSize: 10, fontFamily: "Regular"),
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
           Button(text: "Se Connecter"),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
-          Text(
+          const Text(
             "Ou se connecter avec",
             textAlign: TextAlign.center,
             style:
                 TextStyle(color: FONT_COLOR, fontSize: 14, fontFamily: "Bold"),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(
@@ -89,13 +89,13 @@ class _RegisterState extends State<Register> {
               Image.asset("assets/images/image 12.png")
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 "J’ai déjà un compte! ",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -108,7 +108,7 @@ class _RegisterState extends State<Register> {
                 },
                 child: Row(
                   children: [
-                    Text(
+                    const Text(
                       "Se connecter",
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -116,7 +116,7 @@ class _RegisterState extends State<Register> {
                           fontSize: 14,
                           fontFamily: "Bold"),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 16,
                     ),
                     Image.asset("assets/images/image 10.png"),

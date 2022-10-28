@@ -45,13 +45,13 @@ class _InputState extends State<Input> {
 
                   // ]),
                   suffixIcon: Image.asset(widget.suffixIcon!),
-                  contentPadding: EdgeInsets.all(12),
+                  contentPadding: const EdgeInsets.all(12),
                   border: InputBorder.none,
                   hintText: widget.hintText,
-                  hintStyle: TextStyle(
+                  hintStyle: const TextStyle(
                       fontFamily: "Bold", color: FONT_COLOR, fontSize: 14))),
         ),
-        Divider(
+        const Divider(
           color: FONT_COLOR,
         )
       ],

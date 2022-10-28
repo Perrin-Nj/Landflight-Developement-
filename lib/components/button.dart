@@ -18,7 +18,7 @@ class _ButtonState extends State<Button> {
       width: 223,
       decoration: BoxDecoration(
           color: PRIMARY_COLOR, borderRadius: BorderRadius.circular(22)),
-      child: Text(
+      child: const Text(
         "Se Connecter!",
         style: TextStyle(color: WHITE_COLOR, fontSize: 20, fontFamily: "Bold"),
       ),

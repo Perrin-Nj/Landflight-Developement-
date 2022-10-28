@@ -17,9 +17,9 @@ class _LoginState extends State<Login> {
     return Scaffold(
       backgroundColor: WHITE_COLOR,
       body: ListView(
-        padding: EdgeInsets.only(left: 16, right: 16, top: 60),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 60),
         children: [
-          SafeArea(
+          const SafeArea(
               child: Padding(
             padding: EdgeInsets.only(left: 32),
             child: Text(
