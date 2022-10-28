@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
                   color: FONT_COLOR, fontSize: 30, fontFamily: "Bold"),
             ),
           )),
-          SizedBox(
+          const SizedBox(
             height: 32,
           ),
           Input(
