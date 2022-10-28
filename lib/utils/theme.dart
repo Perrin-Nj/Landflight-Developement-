@@ -35,7 +35,7 @@ ThemeData darkTheme() {
           color: Color.fromARGB(255, 255, 255, 255),
         ),
       ),
-      cursorColor: const Color.fromRGBO(51, 182, 161, 1),
+      // cursorColor: const Color.fromRGBO(51, 182, 161, 1),
       iconTheme: const IconThemeData(
         color: Color.fromRGBO(7, 28, 145, 0.95),
       ));
@@ -71,6 +71,6 @@ ThemeData lightTheme() {
         color: Color.fromARGB(255, 0, 0, 0),
       ),
     ),
-    cursorColor: const Color.fromRGBO(7, 28, 145, 0.95),
+    // cursorColor: const Color.fromRGBO(7, 28, 145, 0.95),
   );
 }
