@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:landflight/utils/theme.dart';
 
 class Input extends StatefulWidget {
-  String? suffixIcon, prefixIcon, hintText;
+  String? hintText;
+  Widget suffixIcon, prefixIcon;
   bool? isTel;
   Input(
       {Key? key,
@@ -33,27 +34,16 @@ class _InputState extends State<Input> {
               textAlign: TextAlign.start,
               onChanged: (value) {},
               decoration: InputDecoration(
-                  prefixIcon: !widget.isTel!
-                      ? Image.asset(widget.prefixIcon!)
-                      : Image.asset(
-                          "assets/images/image 8.png",
-                          width: 22,
-                        ), //Row(
-                  //  mainAxisAlignment: MainAxisAlignment.start,
-                  ///children: [
-                  //Icon(Icons.keyboard_arrow_down_outlined),
+                  prefixIcon: widget.prefixIcon,
 
                   // ]),
-                  suffixIcon: Image.asset(widget.suffixIcon!),
+                  suffixIcon: widget.suffixIcon,
                   contentPadding: const EdgeInsets.all(12),
-                  border: InputBorder.none,
+                  // border: InputBorder(),
                   hintText: widget.hintText,
                   hintStyle: const TextStyle(
                       fontFamily: "Bold", color: FONT_COLOR, fontSize: 14))),
         ),
-        const Divider(
-          color: FONT_COLOR,
-        )
       ],
     );
   }

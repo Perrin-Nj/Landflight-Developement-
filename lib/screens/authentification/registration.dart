@@ -3,6 +3,7 @@ import 'package:landflight/components/Input.dart';
 import 'package:landflight/components/button.dart';
 import 'package:landflight/screens/authentification/login.dart';
 import 'package:landflight/utils/theme.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class Register extends StatefulWidget {
   Register({Key? key}) : super(key: key);
@@ -34,44 +35,60 @@ class _RegisterState extends State<Register> {
           Input(
               isTel: false,
               hintText: "Nom",
-              suffixIcon: "assets/images/_.png",
-              prefixIcon: "assets/images/image 11 (1).png"),
+              prefixIcon: Icon(Icons.person_outlined),
+              suffixIcon: Image.asset("assets/images/_.png")),
           const SizedBox(
-            height: 20,
+            height: 32,
           ),
           Input(
               isTel: false,
               hintText: "Email",
-              suffixIcon: "assets/images/_.png",
-              prefixIcon: "assets/images/image 4.png"),
+              prefixIcon: Icon(Icons.mail_outline),
+              suffixIcon: Image.asset("assets/images/_.png")),
           const SizedBox(
-            height: 20,
+            height: 32,
           ),
           Input(
               isTel: false,
               hintText: "Mot de passe",
-              suffixIcon: "assets/images/_.png",
-              prefixIcon: "assets/images/image 1.png"),
+              prefixIcon: Icon(Icons.lock_outline),
+              suffixIcon: Image.asset("assets/images/_.png")),
           const SizedBox(
-            height: 20,
+            height: 32,
           ),
-          Input(
-              isTel: true,
-              hintText: "Téléphone",
-              suffixIcon: "assets/images/_.png",
-              prefixIcon: "assets/images/image 1.png"),
-          const Text(
-            "J’ai oublié mon mot de passe",
-            textAlign: TextAlign.right,
-            style: TextStyle(
-                color: PRIMARY_COLOR, fontSize: 10, fontFamily: "Regular"),
+          InternationalPhoneNumberInput(
+            onInputChanged: (PhoneNumber number) {
+              print(number.phoneNumber);
+            },
+            onInputValidated: (bool value) {
+              print(value);
+            },
+            selectorConfig: SelectorConfig(
+              //trailingSpace: false,
+              leadingPadding: 8,
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+            ),
+            ignoreBlank: false,
+            autoValidateMode: AutovalidateMode.disabled,
+            selectorTextStyle: TextStyle(color: Colors.black),
+
+            //textFieldController: controller,
+            formatInput: false,
+            keyboardType:
+                TextInputType.numberWithOptions(signed: true, decimal: true),
+            // inputBorder: OutlineInputBorder(),
+            onSaved: (PhoneNumber number) {
+              print('On Saved: $number');
+            },
           ),
           const SizedBox(
             height: 40,
           ),
-          Button(text: "Se Connecter"),
+          Button(
+            text: "S’enregistrer",
+          ),
           const SizedBox(
-            height: 20,
+            height: 32,
           ),
           const Text(
             "Ou se connecter avec",
@@ -80,7 +97,7 @@ class _RegisterState extends State<Register> {
                 TextStyle(color: FONT_COLOR, fontSize: 14, fontFamily: "Bold"),
           ),
           const SizedBox(
-            height: 20,
+            height: 32,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -119,7 +136,11 @@ class _RegisterState extends State<Register> {
                     const SizedBox(
                       width: 16,
                     ),
-                    Image.asset("assets/images/image 10.png"),
+                    Icon(
+                      Icons.arrow_back,
+                      color: PRIMARY_COLOR,
+                      size: 25,
+                    )
                   ],
                 ),
               )
