@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:landflight/vues/onboarding/choix_langue.dart';
 import 'package:landflight/vues/onboarding/onboarding1.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Onboarding1(),
+        body: ChoixLangue(),
       ),
     );
   }

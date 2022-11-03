@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:landflight/vues/splash_screen.dart';
 
 class OnboardingBase extends StatelessWidget {
   String? imagePath;
@@ -35,7 +36,7 @@ class OnboardingBase extends StatelessWidget {
             getTitleWidget(),
             getDescription(),
             getDivider(),
-            getBottomWidgets(),
+            getBottomWidgets(context),
           ],
         )));
   }
@@ -85,23 +86,26 @@ class OnboardingBase extends StatelessWidget {
     );
   }
 
-  getBottomWidgets() {
+  getBottomWidgets(context) {
     return Container(
         margin: EdgeInsets.only(top: 30),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [getBackButton(), getDots(), getNextButton()],
+          children: [getBackButton(context), getDots(), getNextButton()],
         ));
   }
 
-  getBackButton() {
+  getBackButton(context) {
     if (back != null && index! < 2) {
       // if (back != null) {
       TextStyle textStyle = const TextStyle(
           fontFamily: "inter", fontSize: 17, color: Color(0xff000000));
       return TextButton(
           onPressed: () {
-            back!();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Home()),
+            );
           },
           child: Text(
             "Passer",
