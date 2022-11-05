@@ -5,6 +5,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:landflight/vues/onboarding/onboarding1.dart';
 import 'package:landflight/vues/onboarding/onboarding2.dart';
 import 'package:landflight/vues/onboarding/onboarding_base.dart';
+import 'package:landflight/vues/splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChoixLangue extends StatefulWidget {
   const ChoixLangue({super.key});
@@ -15,8 +17,30 @@ class ChoixLangue extends StatefulWidget {
 
 class _ChoixLangueState extends State<ChoixLangue> {
   String language = 'français';
+  Future shouldGoHome = checkIfOnboardingAlreadyMade();
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: shouldGoHome,
+        builder: (context, snapshot) {
+          Widget mainWidget;
+          if (snapshot.hasError) {
+            mainWidget = getChoixDeLangue();
+          } else if (snapshot.hasData) {
+            if (snapshot.data == true) {
+              mainWidget = Home();
+            } else {
+              mainWidget = getChoixDeLangue();
+            }
+          } else {
+            mainWidget = getLoadingScreen();
+          }
+          return mainWidget;
+        });
+  }
+
+  getChoixDeLangue() {
     return Scaffold(
         body: Column(
       children: [
@@ -168,4 +192,31 @@ class _ChoixLangueState extends State<ChoixLangue> {
       MaterialPageRoute(builder: (context) => const Onboarding1()),
     );
   }
+
+  goHome() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Home()),
+    );
+  }
+
+  getLoadingScreen() {
+    return Scaffold(
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+          SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(),
+          ),
+        ]));
+  }
+}
+
+checkIfOnboardingAlreadyMade() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.containsKey('onboarded') &&
+      prefs.getBool('onboarded') != null &&
+      prefs.getBool('onboarded')!;
 }

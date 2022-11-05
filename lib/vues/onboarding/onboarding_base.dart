@@ -120,7 +120,7 @@ class OnboardingBase extends StatelessWidget {
 
   getDots() {
     return Container(
-        width: 200,
+        width: 150,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
