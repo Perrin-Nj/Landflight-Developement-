@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:landflight/controller/ControllerComment.dart';
+import 'package:landflight/controller/MenuController.dart';
+import 'package:landflight/controller/SearchController.dart';
 import 'package:landflight/screens/authentification/login.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => MenuController()),
+      ChangeNotifierProvider(create: (context) => SearchController()),
+      ChangeNotifierProvider(create: (context) => CommentController()),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
