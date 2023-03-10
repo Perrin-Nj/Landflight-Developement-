@@ -3,14 +3,14 @@ import 'package:landflight/controller/ControllerComment.dart';
 import 'package:landflight/utils/theme.dart';
 import 'package:provider/provider.dart';
 
-class CardPost extends StatefulWidget {
-  CardPost({Key? key}) : super(key: key);
+class CardAgences extends StatefulWidget {
+  CardAgences({Key? key}) : super(key: key);
 
   @override
-  State<CardPost> createState() => _CardPostState();
+  State<CardAgences> createState() => _CardAgencesState();
 }
 
-class _CardPostState extends State<CardPost> {
+class _CardAgencesState extends State<CardAgences> {
   @override
   Widget build(BuildContext context) {
     final heigth = MediaQuery.of(context).size.height;
@@ -23,11 +23,12 @@ class _CardPostState extends State<CardPost> {
         right: 8,
       ),
       width: widht,
-      height: 300,
+      height: 150,
       decoration: BoxDecoration(
           color: GREENlIGTH_COLOR, borderRadius: BorderRadius.circular(14)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
             // width: widht,
@@ -52,20 +53,12 @@ class _CardPostState extends State<CardPost> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            "Générale",
+                            "LALA VOYAGES",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                color: FONT_COLOR,
-                                fontSize: 14,
+                                color: FONT_COLOR1,
+                                fontSize: 18,
                                 fontFamily: "Bold"),
-                          ),
-                          Text(
-                            "il y’a 1h",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: FONT_COLOR,
-                                fontSize: 14,
-                                fontFamily: "Regular"),
                           ),
                         ],
                       ),
@@ -76,39 +69,36 @@ class _CardPostState extends State<CardPost> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                            onPressed: () {}, icon: Icon(Icons.more_horiz)),
+                            onPressed: () {}, icon: Icon(Icons.more_vert)),
                       ],
                     ))
               ],
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-              top: 10,
-              left: 8,
-              right: 8,
-            ),
-            child: Text(
-              "meilleure agence de voyage au pays, pour vous servir meilleure agence de voyage au pays, ",
-              style: TextStyle(
-                  color: FONT_COLOR, fontSize: 14, fontFamily: "Regular"),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 10,
-              left: 8,
-              right: 8,
-            ),
-            child: Container(
-              height: 95,
-              width: widht,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/images/image 26.png'))),
-            ),
-          ),
+              padding: EdgeInsets.only(
+                //  top: 10,
+                left: 8,
+                right: 8,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    size: 17,
+                    color: GRAY_COLOR,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    "Directions vers l’agence",
+                    style: TextStyle(
+                        color: FONT_COLOR, fontSize: 14, fontFamily: "Regular"),
+                  ),
+                ],
+              )),
           Padding(
               padding: EdgeInsets.only(
                 top: 10,
@@ -118,42 +108,16 @@ class _CardPostState extends State<CardPost> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("100 likes",
-                      style: TextStyle(
-                          color: FONT_COLOR,
-                          fontSize: 14,
-                          fontFamily: "Light")),
-                  Text("10 commentaires",
-                      style: TextStyle(
-                          color: FONT_COLOR, fontSize: 14, fontFamily: "Light"))
-                ],
-              )),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 6,
-              left: 8,
-              right: 8,
-            ),
-            child: Divider(
-              color: Color.fromRGBO(86, 134, 145, 1),
-            ),
-          ),
-          Padding(
-              padding: EdgeInsets.only(
-                top: 6,
-                left: 8,
-                right: 8,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
                   Row(
                     children: [
-                      Icon(Icons.favorite),
+                      Icon(
+                        Icons.star,
+                        color: Color.fromARGB(255, 209, 236, 75),
+                      ),
                       SizedBox(
                         width: 8,
                       ),
-                      Text("Likes",
+                      Text("etoiles",
                           style: TextStyle(
                               color: FONT_COLOR,
                               fontSize: 14,
@@ -177,7 +141,20 @@ class _CardPostState extends State<CardPost> {
                                 fontFamily: "Light")),
                       ],
                     ),
-                  )
+                  ),
+                  Row(
+                    children: [
+                      Icon(Icons.favorite_outline),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text("Likes",
+                          style: TextStyle(
+                              color: FONT_COLOR,
+                              fontSize: 14,
+                              fontFamily: "Light")),
+                    ],
+                  ),
                 ],
               )),
         ],

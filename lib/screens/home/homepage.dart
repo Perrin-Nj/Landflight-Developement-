@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:landflight/components/CardPost.dart';
+import 'package:landflight/components/card_post.dart';
 import 'package:landflight/components/comment_popup.dart';
 import 'package:landflight/components/search_popup.dart';
 import 'package:landflight/controller/ControllerComment.dart';

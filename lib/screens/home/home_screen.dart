@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:landflight/controller/MenuController.dart';
 import 'package:landflight/screens/home/homepage.dart';
+import 'package:landflight/screens/home/nos_agences.dart';
+import 'package:landflight/screens/home/parametre.dart';
 import 'package:landflight/screens/home/save_passager.dart';
 import 'package:landflight/screens/home/side_menu.dart';
 import 'package:landflight/utils/theme.dart';
@@ -32,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         two = false;
         tree = false;
 
-        return Container(); // CheckOut();
+        return Parametre(); // CheckOut();
 
       case 1:
         one = false;
@@ -45,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
         two = true;
         tree = false;
 
-        return Container();
+        return NosAgences();
     }
   }
 
@@ -65,9 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                    color: GRAY_COLOR,
                     width: widht,
                     height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: GRAY_COLOR,
+                    ),
                     child: Padding(
                       padding: EdgeInsets.only(
                           left: widht * 0.1, right: widht * 0.1),
@@ -77,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           IconButton(
                               onPressed: () => _change(0),
                               icon: Icon(
-                                Icons.location_city_outlined,
+                                Icons.map_outlined,
                                 size: 40,
                                 color: this.one
                                     ? FONT_COLOR
@@ -86,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           IconButton(
                               onPressed: () => _change(2),
                               icon: Icon(
-                                Icons.calendar_view_month,
+                                Icons.favorite_outline,
                                 size: 40,
                                 color: this.two
                                     ? FONT_COLOR

@@ -38,7 +38,9 @@ class _Save_passagerState extends State<Save_passager> {
                       Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
                             icon: Icon(Icons.arrow_back_ios),
                             color: PRIMARY_COLOR,
                           ),
@@ -167,7 +169,7 @@ class _Save_passagerState extends State<Save_passager> {
                       Padding(
                           padding: EdgeInsets.only(left: 16, right: 16, top: 2),
                           child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text("15/01/2022",
                                     style: TextStyle(
@@ -467,7 +469,7 @@ class _Save_passagerState extends State<Save_passager> {
                                   fontSize: 20,
                                   fontFamily: "Regular")),
                           SizedBox(
-                            width: 16,
+                            width: 10,
                           ),
                           Container(
                             height: 60,
@@ -475,7 +477,7 @@ class _Save_passagerState extends State<Save_passager> {
                             color: FONT_COLOR,
                           ),
                           SizedBox(
-                            width: 16,
+                            width: 10,
                           ),
                           Container(
                             height: 60,
@@ -501,9 +503,6 @@ class _Save_passagerState extends State<Save_passager> {
                                         fontFamily: "Regular")),
                               ],
                             ),
-                          ),
-                          SizedBox(
-                            width: 16,
                           ),
                           Container(
                             alignment: Alignment.bottomCenter,

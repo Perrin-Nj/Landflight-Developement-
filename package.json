@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "ejs-lint": "^2.0.0"
+  }
+}
