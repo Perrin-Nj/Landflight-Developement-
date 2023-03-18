@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:landflight/vues/onboarding/onboarding_base.dart';
-import 'package:landflight/vues/splash_screen.dart';
+import 'package:landflight/vues/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Onboarding3 extends StatelessWidget {
