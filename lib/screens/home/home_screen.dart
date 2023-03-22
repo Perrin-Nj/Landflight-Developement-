@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:landflight/controller/MenuController.dart';
+import 'package:landflight/screens/home/historique_voyage.dart';
 import 'package:landflight/screens/home/homepage.dart';
 import 'package:landflight/screens/home/nos_agences.dart';
 import 'package:landflight/screens/home/parametre.dart';
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         two = false;
         tree = false;
 
-        return Container();
+        return Historique_voyage();
 
       case 1:
         one = false;
