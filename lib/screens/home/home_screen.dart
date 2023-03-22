@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
         two = false;
         tree = false;
 
-        return Parametre(); // CheckOut();
+        return Container();
 
       case 1:
         one = false;
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
         two = true;
         tree = false;
 
-        return NosAgences();
+        return Container();
     }
   }
 

@@ -37,7 +37,7 @@ class _ParametreState extends State<Parametre> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          context.read<MenuController>().controlMenu();
+                          Navigator.of(context).pop();
                         },
                         icon: Icon(
                           Icons.arrow_back_ios,

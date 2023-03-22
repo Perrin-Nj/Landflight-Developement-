@@ -3,6 +3,8 @@ import 'package:landflight/controller/ControllerComment.dart';
 import 'package:landflight/controller/MenuController.dart';
 import 'package:landflight/controller/SearchController.dart';
 import 'package:landflight/screens/authentification/login.dart';
+import 'package:landflight/screens/home/home_screen.dart';
+import 'package:landflight/screens/home/payement.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -44,6 +46,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Login();
+    return HomeScreen();
   }
 }
