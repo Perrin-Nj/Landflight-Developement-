@@ -1,13 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:landflight/controller/MenuController.dart';
 import 'package:landflight/controller/SearchController.dart';
+import 'package:landflight/vues/authentification/login.dart';
+import 'package:landflight/vues/home/home_screen.dart';
 import 'package:landflight/vues/onboarding/choix_langue.dart';
-import 'package:landflight/vues/onboarding/onboarding1.dart';
 import 'package:provider/provider.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'controller/ControllerComment.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -29,12 +36,25 @@ class MyApp extends StatelessWidget {
           return SearchController();
         }),
       ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          body: ChoixLangue(),
-        ),
-      ),
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: StreamBuilder(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Scaffold(
+                    body: HomeScreen(),
+                  );
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return Scaffold(
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else
+                  return ChoixLangue();
+              })),
     );
   }
 }

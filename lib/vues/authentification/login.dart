@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:landflight/components/Input.dart';
 import 'package:landflight/components/button.dart';
@@ -13,8 +14,59 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _formKeyLogin = GlobalKey<FormState>();
+  final motdepasseController = TextEditingController();
+  final nomController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    motdepasseController.dispose();
+    nomController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    void showFormRequiredTooltip() {
+      const Tooltip(
+        message: "Champ obligatoire",
+        decoration: BoxDecoration(color: Colors.blue),
+      );
+    }
+
+    void onTapNom() {
+      showFormRequiredTooltip();
+    }
+
+    void onTapMotdepasse() {
+      showFormRequiredTooltip();
+    }
+
+    void onChangeNom() {}
+    void onChangeMotdepasse() {}
+    String? nomValidator(value) {
+      if (value == null || value.isEmpty) {
+        return "Entrez un nom d'utilisateur valide";
+      }
+      return null;
+    }
+
+    String? motdepasseValidator(value) {
+      RegExp regex = RegExp(
+          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+      var passNonNullValue = value ?? "";
+      if (passNonNullValue.isEmpty) {
+        return ("Mot de passe requis");
+      } else if (passNonNullValue.length < 5) {
+        return ("Le mot de passe doit dépasser 4 charactéres");
+      } else if (!regex.hasMatch(passNonNullValue)) {
+        return ("Le mot de passe doit contenir des charactéres majuscules, minuscules, au moins un nombre et un charactére spécial ");
+      }
+      return null;
+    }
+
     return Scaffold(
       backgroundColor: WHITE_COLOR,
       body: ListView(
@@ -29,40 +81,96 @@ class _LoginState extends State<Login> {
                   color: FONT_COLOR, fontSize: 30, fontFamily: "Bold"),
             ),
           )),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
-          Input(
-              isTel: false,
-              hintText: "Nom d’utilisateur",
-              prefixIcon: Icon(Icons.person_outlined),
-              suffixIcon: Image.asset("assets/images/_.png")),
-          SizedBox(
-            height: 32,
-          ),
-          Input(
-              isTel: false,
-              hintText: "Mot de passe",
-              prefixIcon: Icon(Icons.lock_outline),
-              suffixIcon: Image.asset("assets/images/_.png")),
-          SizedBox(
-            height: 8,
-          ),
-          const Text(
-            "J’ai oublié mon mot de passe",
-            textAlign: TextAlign.right,
-            style: TextStyle(
-                color: PRIMARY_COLOR, fontSize: 10, fontFamily: "Regular"),
-          ),
-          SizedBox(
-            height: 40,
-          ),
-          Button(
-            text: "Se Connecter",
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => HomeScreen()));
-            },
+          Form(
+            key: _formKeyLogin,
+            child: Column(
+              children: [
+                Input(
+                    onTapInput: onTapNom,
+                    inputValidator: nomValidator,
+                    onChangedInput: onChangeNom,
+                    inputController: nomController,
+                    isTel: false,
+                    hintText: "Email",
+                    prefixIcon: Icon(Icons.email_outlined),
+                    suffixIcon: Image.asset("assets/images/_.png")),
+                SizedBox(
+                  height: 18,
+                ),
+                Input(
+                  onTapInput: onTapMotdepasse,
+                  inputValidator: motdepasseValidator,
+                  onChangedInput: onChangeMotdepasse,
+                  inputController: motdepasseController,
+                  isTel: false,
+                  hintText: "Mot de passe",
+                  prefixIcon: Icon(Icons.lock),
+                  suffixIcon: Image.asset("assets/images/_.png"),
+                ),
+                InkWell(
+                  onTap: () {},
+                  child: Text(
+                    "J’ai oublié mon mot de passe",
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                        color: PRIMARY_COLOR,
+                        fontSize: 10,
+                        fontFamily: "Regular"),
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Button(
+                  text: "Se Connecter",
+                  onTap: () async {
+                    if (_formKeyLogin.currentState!.validate()) {
+                      // If the form is valid, display a snackbar. In the real world,
+                      // you'd often call a server or save the information in a database.
+                      /* try {
+                          UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password)
+                      }on FirebaseAuthException catch(e){
+
+                      }*/
+                      try {
+                        await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: nomController.text,
+                          password: motdepasseController.text,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Connecté en tant que ${nomController.text}",
+                            ),
+                          ),
+                        );
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                        );
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'user-not-found') {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Cet email n'existe pas"),
+                          ));
+                        } else if (e.code == "wrong-password") {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Les mots de passe de match pas'),
+                          ));
+                        }
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Informations valides')),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
           SizedBox(
             height: 32,

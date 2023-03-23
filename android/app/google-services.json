@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1025923569206",
+    "firebase_url": "https://landflight-backend-default-rtdb.firebaseio.com",
+    "project_id": "landflight-backend",
+    "storage_bucket": "landflight-backend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025923569206:android:2708f2ea26d05223a6aa97",
+        "android_client_info": {
+          "package_name": "com.example.landflight"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025923569206-uvdt3aegbekork33ar99k7jbuce8cq0u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAplByaGz14EVdsU_qbu9zylDtpNOlMIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1025923569206-uvdt3aegbekork33ar99k7jbuce8cq0u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1025923569206-6m26973r2e8l8j4jcle74cjkjsacndi8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.landflight"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

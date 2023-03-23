@@ -5,13 +5,21 @@ class Input extends StatefulWidget {
   String? hintText;
   Widget suffixIcon, prefixIcon;
   bool? isTel;
-  Input(
-      {Key? key,
-      required this.hintText,
-      required this.isTel,
-      required this.prefixIcon,
-      required this.suffixIcon})
-      : super(key: key);
+  TextEditingController inputController;
+  Function onTapInput;
+  Function onChangedInput;
+  Function inputValidator;
+  Input({
+    Key? key,
+    required this.hintText,
+    required this.isTel,
+    required this.prefixIcon,
+    required this.suffixIcon,
+    required this.inputController,
+    required this.onChangedInput,
+    required this.onTapInput,
+    required this.inputValidator,
+  }) : super(key: key);
 
   @override
   State<Input> createState() => _InputState();
@@ -25,14 +33,22 @@ class _InputState extends State<Input> {
         Container(
           height: 40,
           color: WHITE_COLOR,
-          child: TextField(
+          child: TextFormField(
               keyboardType: TextInputType.text,
-              onTap: () {},
-              onSubmitted: (_) {},
+              controller: widget.inputController,
+              onTap: () => widget.onTapInput(),
+              validator: (value) {
+                return widget.inputValidator(value);
+              },
               style: const TextStyle(
-                  fontFamily: "Bold", color: FONT_COLOR, fontSize: 14),
+                fontFamily: "Bold",
+                color: FONT_COLOR,
+                fontSize: 14,
+              ),
               textAlign: TextAlign.start,
-              onChanged: (value) {},
+              onChanged: (value) {
+                widget.onChangedInput;
+              },
               decoration: InputDecoration(
                   prefixIcon: widget.prefixIcon,
 
