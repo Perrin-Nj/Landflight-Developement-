@@ -52,7 +52,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.10.0
 
 flutter_icons:
-  image_path: "lib/assets/images/logosplash.png"
+  image_path: "lib/assets/images/logos.png"
   android: true
   ios: true
 

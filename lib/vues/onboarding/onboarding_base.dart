@@ -31,6 +31,7 @@ class OnboardingBase extends StatelessWidget {
         }),
         child: Scaffold(
             body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             getImageWidget(),
             getTitleWidget(),
@@ -48,7 +49,7 @@ class OnboardingBase extends StatelessWidget {
       decoration: decoration,
       width: 283,
       height: 283,
-      margin: const EdgeInsets.only(top: 170, bottom: 50),
+      margin: const EdgeInsets.only(bottom: 50),
     );
   }
 

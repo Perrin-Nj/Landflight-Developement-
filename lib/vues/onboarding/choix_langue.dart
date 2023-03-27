@@ -26,12 +26,12 @@ class _ChoixLangueState extends State<ChoixLangue> {
         builder: (context, snapshot) {
           Widget mainWidget;
           if (snapshot.hasError) {
-            mainWidget = getChoixDeLangue();
+            mainWidget = getChoixDeLangue(context);
           } else if (snapshot.hasData) {
             if (snapshot.data == true) {
               mainWidget = Home();
             } else {
-              mainWidget = getChoixDeLangue();
+              mainWidget = getChoixDeLangue(context);
             }
           } else {
             mainWidget = getLoadingScreen();
@@ -40,9 +40,31 @@ class _ChoixLangueState extends State<ChoixLangue> {
         });
   }
 
-  getChoixDeLangue() {
+  getChoixDeLangue(BuildContext context) {
     return Scaffold(
-        body: Column(
+        body: SingleChildScrollView(
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [getUpperSection(), getLowerSection()],
+                ))));
+  }
+
+  Widget getLowerSection() {
+    return Column(
+      children: [
+        getContinueButton(),
+        SizedBox(
+          height: 20,
+        )
+      ],
+    );
+  }
+
+  Widget getUpperSection() {
+    return Column(
       children: [
         getLeftLogo(),
         const SizedBox(
@@ -52,13 +74,9 @@ class _ChoixLangueState extends State<ChoixLangue> {
         const SizedBox(
           height: 50,
         ),
-        getLanguagesImages(),
-        const SizedBox(
-          height: 200,
-        ),
-        getContinueButton()
+        getLanguagesImages()
       ],
-    ));
+    );
   }
 
   getLeftLogo() {
@@ -107,12 +125,15 @@ class _ChoixLangueState extends State<ChoixLangue> {
     return Container(
         margin: const EdgeInsets.only(left: 25, right: 25),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             getLanguageCard("lib/assets/images/french flag.png", "Français",
                 () {
               changeLanguage("français");
             }),
+            SizedBox(
+              width: 20,
+            ),
             getLanguageCard("lib/assets/images/english flag.png", "English",
                 () {
               changeLanguage("anglais");
