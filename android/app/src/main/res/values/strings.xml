@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Landflight</string>
+    <string name="facebook_app_id">197589373017733</string>
+    <string name="fb_login_protocol_scheme">fb197589373017733</string>
+    <string name="facebook_client_token">5f629043dac81065552b56a3730ef732</string>
+</resources>

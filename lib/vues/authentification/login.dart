@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:landflight/components/Input.dart';
 import 'package:landflight/components/button.dart';
+import 'package:landflight/vues/authentification/mot_de_passe_oublie.dart';
 import 'package:landflight/vues/authentification/registration.dart';
 import 'package:landflight/vues/home/home_screen.dart';
 import 'package:landflight/utils/theme.dart';
@@ -111,7 +115,14 @@ class _LoginState extends State<Login> {
                   suffixIcon: Image.asset("assets/images/_.png"),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MotdepasseOublie(),
+                      ),
+                    );
+                  },
                   child: Text(
                     "J’ai oublié mon mot de passe",
                     textAlign: TextAlign.right,
@@ -128,6 +139,10 @@ class _LoginState extends State<Login> {
                   text: "Se Connecter",
                   onTap: () async {
                     if (_formKeyLogin.currentState!.validate()) {
+                      SmartDialog.showLoading(
+                        msg: "loading...",
+                        useAnimation: true,
+                      );
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
                       /* try {
@@ -142,6 +157,7 @@ class _LoginState extends State<Login> {
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
+                            backgroundColor: Colors.green,
                             content: Text(
                               "Connecté en tant que ${nomController.text}",
                             ),
@@ -152,20 +168,20 @@ class _LoginState extends State<Login> {
                             builder: (context) => HomeScreen(),
                           ),
                         );
+                        SmartDialog.dismiss();
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: Colors.red,
                             content: Text("Cet email n'existe pas"),
                           ));
                         } else if (e.code == "wrong-password") {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: Colors.red,
                             content: Text('Les mots de passe de match pas'),
                           ));
                         }
                       }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Informations valides')),
-                      );
                     }
                   },
                 ),
@@ -187,8 +203,13 @@ class _LoginState extends State<Login> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset("assets/images/image 11.png"),
-              Image.asset("assets/images/image 12.png")
+              InkWell(
+                child: Image.asset("assets/images/image 11.png"),
+                onTap: () {
+                  _loginWithFacebook();
+                },
+              ),
+              // Image.asset("assets/images/image 12.png")
             ],
           ),
           SizedBox(
@@ -197,7 +218,7 @@ class _LoginState extends State<Login> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 "Je n’ai pas de compte! ",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -209,7 +230,7 @@ class _LoginState extends State<Login> {
                       MaterialPageRoute(builder: (context) => Register()));
                 },
                 child: Row(
-                  children: [
+                  children: const [
                     Text(
                       "S’enregistrer",
                       textAlign: TextAlign.center,
@@ -234,5 +255,83 @@ class _LoginState extends State<Login> {
         ],
       ),
     );
+  }
+
+  Future<void> _loginWithFacebook() async {
+    // SmartDialog.showLoading();
+    debugPrint("hi there 1-°");
+    try {
+      print("hi there 1");
+      final facebookLoginResult = await FacebookAuth.instance.login();
+      print("hi there 2");
+      final userData = await FacebookAuth.instance.getUserData();
+      print("hi there 3");
+
+      final facebookAuthCredential = FacebookAuthProvider.credential(
+        facebookLoginResult.accessToken!.token,
+      );
+      print("hi there 4");
+      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      await FirebaseFirestore.instance.collection('user').add({
+        'email': userData['email'],
+        'name': userData['name'],
+        'phone': userData['phone'],
+        'numero_cni': int.parse("0"),
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(),
+        ),
+      );
+      SmartDialog.dismiss();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Text("Connecté en tant que: ${userData['email']}"),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      var contenuErreur = "";
+      switch (e.code) {
+        case 'account-exists-with-different-credentials':
+          contenuErreur =
+              "Désolé, ce compte existe déjà avec un autre provider.";
+          break;
+        case 'invalid-credentials':
+          contenuErreur = "une erreur Inconnu s'est produite";
+          break;
+        case 'operation-not-allowed':
+          contenuErreur = "L'opération n'est pas autorisée";
+          break;
+        case 'user-disabled':
+          contenuErreur = "L'utilisateur a été desactivé ou rejeté.";
+          break;
+        case 'user-not-found':
+          contenuErreur = "L'utilisateur n'a pas été trouvé";
+          break;
+        case 'account-exists-with-different-credential':
+          contenuErreur =
+              "Désolé, ce compte existe déjà avec des informations différentes. Créez un nouveau compte, ou connectez vous à votre compte.";
+          break;
+        default:
+          contenuErreur = e.code;
+          break;
+      }
+      showDialog(
+        context: context,
+        builder: ((context) => AlertDialog(
+              title: const Text("La connexion à Facebook a échouée."),
+              content: Text(contenuErreur),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Ok")),
+              ],
+            )),
+      );
+    }
   }
 }

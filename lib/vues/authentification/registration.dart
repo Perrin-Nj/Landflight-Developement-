@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +7,7 @@ import 'package:landflight/components/button.dart';
 import 'package:landflight/vues/authentification/login.dart';
 import 'package:landflight/utils/theme.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 
 import '../home/home_screen.dart';
 
@@ -20,7 +19,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final _formKeyRegister = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKeyRegister = GlobalKey<FormState>();
   final motdepasseController = TextEditingController();
   final nomController = TextEditingController();
   final emailController = TextEditingController();
@@ -81,7 +80,7 @@ class _RegisterState extends State<Register> {
     return null;
   }
 
-  String? validateEmail(String value) {
+  static String? validateEmail(String value) {
     Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = RegExp(pattern as String);
@@ -193,6 +192,10 @@ class _RegisterState extends State<Register> {
             text: "S’enregistrer",
             onTap: () async {
               if (_formKeyRegister.currentState!.validate()) {
+                SmartDialog.showLoading(
+                  msg: "loading",
+                  useAnimation: true,
+                );
                 // If the form is valid, display a snackbar. In the real world,
                 // you'd often call a server or save the information in a database.
                 try {
@@ -200,25 +203,31 @@ class _RegisterState extends State<Register> {
                       .createUserWithEmailAndPassword(
                     email: emailController.text,
                     password: motdepasseController.text,
-                  );
-                  await FirebaseAuth.instance.currentUser!
-                      .updateDisplayName(nomController.text);
-                  await FirebaseAuth.instance.currentUser!.updatePhoneNumber(
-                      phoneController.text as PhoneAuthCredential);
+                  )
+                      .then((user) async {
+                    const SnackBar(
+                      backgroundColor: Colors.greenAccent,
+                      content: Text(
+                        "Utilisateur crée!",
+                      ),
+                    );
+                    return user;
+                  });
                   await FirebaseFirestore.instance
-                      .collection('users')
+                      .collection('user')
                       .doc(userCredential.user!.uid)
                       .set({
                     'email': emailController.text,
                     'name': nomController.text,
-                    'phone': phoneController.text,
+                    'phone': int.parse(phoneController.text),
+                    'numero_cni': int.parse("0"),
                     // 'password': motdepasseController.text,
                   });
+                  await FirebaseAuth.instance.currentUser!
+                      .updateDisplayName(nomController.text);
+                  await FirebaseAuth.instance.currentUser!.updatePhoneNumber(
+                      phoneController.text as PhoneAuthCredential);
                 } on FirebaseAuthException catch (e) {
-                  setState(() {
-                    hasRegistrationError = true;
-                  });
-
                   if (e.code == 'weak-password') {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -237,6 +246,12 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                     );
+                  } else {
+                    SnackBar(
+                      content: Text(
+                        e.toString(),
+                      ),
+                    );
                   }
                 } catch (e) {
                   SnackBar(
@@ -246,39 +261,26 @@ class _RegisterState extends State<Register> {
                   );
                 }
 
-                !hasRegistrationError
-                    ? ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              "Connecté en tant que: ${emailController.text}"),
-                        ),
-                      )
-                    : Text("");
-                !hasRegistrationError
-                    ? Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => HomeScreen()))
-                    : Text("");
+                // ignore: use_build_context_synchronously
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                );
+                SmartDialog.dismiss();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.green,
+                    content:
+                        Text("Connecté en tant que: ${emailController.text}"),
+                  ),
+                );
               }
             },
           ),
           const SizedBox(
             height: 32,
-          ),
-          const Text(
-            "Ou se connecter avec",
-            textAlign: TextAlign.center,
-            style:
-                TextStyle(color: FONT_COLOR, fontSize: 14, fontFamily: "Bold"),
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset("assets/images/image 11.png"),
-              Image.asset("assets/images/image 12.png")
-            ],
           ),
           const SizedBox(
             height: 40,
@@ -294,8 +296,11 @@ class _RegisterState extends State<Register> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => Login()));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Login(),
+                    ),
+                  );
                 },
                 child: Row(
                   children: const [

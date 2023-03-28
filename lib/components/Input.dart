@@ -34,6 +34,7 @@ class _InputState extends State<Input> {
           height: 40,
           color: WHITE_COLOR,
           child: TextFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               keyboardType: TextInputType.text,
               controller: widget.inputController,
               onTap: () => widget.onTapInput(),

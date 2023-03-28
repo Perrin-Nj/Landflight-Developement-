@@ -42,6 +42,8 @@ dependencies:
   firebase_core: ^2.8.0
   firebase_auth: ^4.3.0
   cloud_firestore: ^4.4.5
+  flutter_smart_dialog: ^4.9.0+4
+  flutter_facebook_auth: ^5.0.8
   
 
 dev_dependencies:

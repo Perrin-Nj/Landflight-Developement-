@@ -40,16 +40,16 @@ class _HomePageState extends State<HomePage> {
                   alignment: Alignment.centerLeft,
                   height: 50,
                   width: widht,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: PRIMARY_COLOR,
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(20))),
                   child: IconButton(
                       onPressed: () {
-                        context.read<menuController>().controlMenu();
+                        //  context.read<menuController>().controlMenu();
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.menu,
                         size: 24,
                         color: WHITE_COLOR,
