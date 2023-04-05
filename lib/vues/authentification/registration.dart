@@ -228,6 +228,7 @@ class _RegisterState extends State<Register> {
                   await FirebaseAuth.instance.currentUser!.updatePhoneNumber(
                       phoneController.text as PhoneAuthCredential);
                 } on FirebaseAuthException catch (e) {
+                  SmartDialog.dismiss();
                   if (e.code == 'weak-password') {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -254,6 +255,7 @@ class _RegisterState extends State<Register> {
                     );
                   }
                 } catch (e) {
+                  SmartDialog.dismiss();
                   SnackBar(
                     content: Text(
                       e.toString(),

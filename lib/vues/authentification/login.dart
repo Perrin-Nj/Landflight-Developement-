@@ -116,7 +116,7 @@ class _LoginState extends State<Login> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => MotdepasseOublie(),
@@ -170,15 +170,17 @@ class _LoginState extends State<Login> {
                         );
                         SmartDialog.dismiss();
                       } on FirebaseAuthException catch (e) {
+                        SmartDialog.dismiss();
                         if (e.code == 'user-not-found') {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.red,
                             content: Text("Cet email n'existe pas"),
                           ));
                         } else if (e.code == "wrong-password") {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
                             backgroundColor: Colors.red,
-                            content: Text('Les mots de passe de match pas'),
+                            content: Text('Le mots de passe de match pas'),
                           ));
                         }
                       }
@@ -212,7 +214,7 @@ class _LoginState extends State<Login> {
               // Image.asset("assets/images/image 12.png")
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
           Row(

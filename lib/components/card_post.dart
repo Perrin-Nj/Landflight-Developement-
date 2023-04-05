@@ -1,18 +1,60 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:landflight/controller/ControllerComment.dart';
+import 'package:landflight/controller/LikePostController.dart';
 import 'package:landflight/utils/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/agence.dart';
+import '../models/post.dart';
 
 class CardPost extends StatefulWidget {
-  CardPost({Key? key}) : super(key: key);
+  Post monPost;
+  Agence monAgence;
+  var postDocId;
+  CardPost({
+    Key? key,
+    required this.monPost,
+    required this.monAgence,
+    required this.postDocId,
+  }) : super(key: key);
 
   @override
   State<CardPost> createState() => _CardPostState();
 }
 
 class _CardPostState extends State<CardPost> {
+  bool _hasLiked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedPrefsData();
+  }
+
+  int i = 0;
+  Future<void> _loadSavedPrefsData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _hasLiked = prefs.getBool('hasLiked') ?? false;
+    });
+  }
+
+  Future<void> _savePrefsData(bool value) async {
+    i = i + 1;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasLiked', value);
+  }
+
   @override
   Widget build(BuildContext context) {
+    LikePostController.like = widget.monPost.likes;
+    final postLikes = Provider.of<LikePostController>(context);
+    LikePostController.staticPostUid = widget.postDocId;
     final heigth = MediaQuery.of(context).size.height;
     final widht = MediaQuery.of(context).size.width;
     return Container(
@@ -37,8 +79,13 @@ class _CardPostState extends State<CardPost> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CircleAvatar(
+                  onBackgroundImageError: (exception, stackTrace) {
+                    Image.asset("assets/images/image 30.png");
+                  },
                   radius: 25,
-                  backgroundImage: AssetImage("assets/images/busTemplate.png"),
+                  backgroundImage: NetworkImage(
+                    widget.monAgence.profileUrl,
+                  ),
                 ),
                 SizedBox(
                   width: 10,
@@ -52,15 +99,16 @@ class _CardPostState extends State<CardPost> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            "Générale",
+                            widget.monAgence.nom,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: FONT_COLOR,
                                 fontSize: 14,
                                 fontFamily: "Bold"),
                           ),
+                          //TODO
                           Text(
-                            "il y’a 1h",
+                            "il y’a ${DateTime.now().hour}",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: FONT_COLOR,
@@ -83,19 +131,19 @@ class _CardPostState extends State<CardPost> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               top: 10,
               left: 8,
               right: 8,
             ),
             child: Text(
-              "meilleure agence de voyage au pays, pour vous servir meilleure agence de voyage au pays, ",
+              widget.monPost.description,
               style: TextStyle(
                   color: FONT_COLOR, fontSize: 14, fontFamily: "Regular"),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               top: 10,
               left: 8,
               right: 8,
@@ -104,31 +152,41 @@ class _CardPostState extends State<CardPost> {
               height: 95,
               width: widht,
               decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/images/image 26.png'))),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: widget.monPost.imageUrl != ""
+                      ? NetworkImage(
+                          widget.monPost.imageUrl,
+                        )
+                      : NetworkImage(
+                          "https://firebasestorage.googleapis.com/v0/b/landflight-backend.appspot.com/o/error%2FerrorImage.jpg?alt=media&token=bb9481d9-7464-4cbc-b99f-8a14c4b78fbc",
+                        ),
+                  onError: (exception, stackTrace) {
+                    Image.asset("assets/images/error.png");
+                  },
+                ),
+              ),
             ),
           ),
           Padding(
-              padding: EdgeInsets.only(
-                top: 10,
-                left: 8,
-                right: 8,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("100 likes",
-                      style: TextStyle(
-                          color: FONT_COLOR,
-                          fontSize: 14,
-                          fontFamily: "Light")),
-                  Text("10 commentaires",
-                      style: TextStyle(
-                          color: FONT_COLOR, fontSize: 14, fontFamily: "Light"))
-                ],
-              )),
-          Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              left: 8,
+              right: 8,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('${postLikes.like2} Likes',
+                    style: const TextStyle(
+                        color: FONT_COLOR, fontSize: 14, fontFamily: "Light")),
+                Text("10 commentaires",
+                    style: TextStyle(
+                        color: FONT_COLOR, fontSize: 14, fontFamily: "Light"))
+              ],
+            ),
+          ),
+          const Padding(
             padding: EdgeInsets.only(
               top: 6,
               left: 8,
@@ -139,7 +197,7 @@ class _CardPostState extends State<CardPost> {
             ),
           ),
           Padding(
-              padding: EdgeInsets.only(
+              padding: const EdgeInsets.only(
                 top: 6,
                 left: 8,
                 right: 8,
@@ -149,15 +207,59 @@ class _CardPostState extends State<CardPost> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.favorite),
-                      SizedBox(
+
+                      
+                      GestureDetector(
+                        onTap: () async {
+                          context.read<LikePostController>().onClickLike();
+
+                          setState(() {
+                            _hasLiked = postLikes.isLiked;
+                          });
+
+                          await _savePrefsData(_hasLiked);
+                          //Update likes in post collection
+                          final docUser = FirebaseFirestore.instance
+                              .collection("post")
+                              .doc(widget.postDocId);
+
+                          _hasLiked
+                              ? postLikes.incrementLike(widget.postDocId)
+                              : postLikes.decrementLike();
+
+                          docUser.update({
+                            'likes': postLikes.like2,
+                          });
+
+                          //updatePost in the userID
+
+                          //  print(userId);
+                        },
+                        child: _hasLiked
+                            ? const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              )
+                            : const Icon(Icons.favorite_border),
+                      ),
+                      const SizedBox(
                         width: 8,
                       ),
-                      Text("Likes",
-                          style: TextStyle(
-                              color: FONT_COLOR,
-                              fontSize: 14,
-                              fontFamily: "Light")),
+                      _hasLiked
+                          ? const Text(
+                              "Dis-Likes",
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 14,
+                                  fontFamily: "Light"),
+                            )
+                          : const Text(
+                              "Likes",
+                              style: TextStyle(
+                                  color: FONT_COLOR,
+                                  fontSize: 14,
+                                  fontFamily: "Light"),
+                            ),
                     ],
                   ),
                   GestureDetector(
@@ -165,7 +267,7 @@ class _CardPostState extends State<CardPost> {
                       context.read<CommentController>().open();
                     },
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(Icons.comment_outlined),
                         SizedBox(
                           width: 8,

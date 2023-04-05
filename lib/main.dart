@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:landflight/controller/MenuController.dart';
 import 'package:landflight/controller/SearchController.dart';
+import 'package:landflight/vues/authentification/login.dart';
 import 'package:landflight/vues/home/home_screen.dart';
 import 'package:landflight/vues/onboarding/choix_langue.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'controller/ControllerComment.dart';
+import 'controller/LikePostController.dart';
 import 'firebase_options.dart';
 
 Future main() async {
@@ -53,6 +55,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) {
           return SearchController();
         }),
+        ChangeNotifierProvider(create: (_) {
+          return LikePostController();
+        }),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -70,14 +75,14 @@ class MyApp extends StatelessWidget {
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
                   // SmartDialog.dismiss();
-                  return  Scaffold(
+                  return Scaffold(
                     body: Center(
                       child: CircularProgressIndicator(),
                     ),
                   );
                 } else {
                   //    SmartDialog.dismiss();
-                  return ChoixLangue();
+                  return Login(); //ChoixLangue();
                 }
               })),
     );

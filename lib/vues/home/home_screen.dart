@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: this.one
                                 ? FONT_COLOR
                                 : Color.fromRGBO(229, 229, 229, 1),
-                          )),
+                          ),),
                       IconButton(
                           onPressed: () => _change(2),
                           icon: Icon(
@@ -113,10 +113,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Card(
                     elevation: 10,
                     shape: RoundedRectangleBorder(
+                      
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    child: CircleAvatar(
-                      radius: 45,
+                    child: const CircleAvatar(
+                      radius: 40,
                       backgroundColor: PRIMARY_COLOR,
                       backgroundImage: AssetImage(
                         'assets/images/image 36.png',
