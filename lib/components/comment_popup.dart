@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:landflight/controller/ControllerComment.dart';
 import 'package:landflight/utils/theme.dart';
 import 'package:provider/provider.dart';
 
 class CommentPopup extends StatefulWidget {
+  static var staticPostUid;
+  var postUid = staticPostUid;
+
   CommentPopup({Key? key}) : super(key: key);
 
   @override
@@ -11,6 +16,33 @@ class CommentPopup extends StatefulWidget {
 }
 
 class _CommentPopupState extends State<CommentPopup> {
+  final commentPostController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    commentPostController.dispose();
+  }
+
+  void _addNewComment(String comment, var postID) {
+    if (comment != "" || comment.isNotEmpty) {
+      final docPost = FirebaseFirestore.instance.collection("post").doc(postID);
+      docPost.update({
+        'comments': FieldValue.arrayUnion([comment]),
+      });
+
+      SmartDialog.showToast("Chargement...",
+          displayTime: const Duration(seconds: 1));
+      context.read<CommentController>().close();
+    } else {
+      SmartDialog.showToast(
+        "Ajoutez un commentaire, s'il vous plait",
+        displayTime: const Duration(seconds: 1),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final heigth = MediaQuery.of(context).size.height;
@@ -18,8 +50,8 @@ class _CommentPopupState extends State<CommentPopup> {
     return Container(
       height: 140,
       width: widht * .9,
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(10),
+      decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(20),
               bottomRight: Radius.circular(20)),
@@ -41,17 +73,17 @@ class _CommentPopupState extends State<CommentPopup> {
                     context.read<CommentController>().close();
                   },
                   child: Icon(Icons.close))),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 22,
                 backgroundImage: AssetImage('assets/images/image 30.png'),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Expanded(
@@ -64,50 +96,74 @@ class _CommentPopupState extends State<CommentPopup> {
                         decoration: BoxDecoration(
                             color: GRAY_COLOR,
                             borderRadius: BorderRadius.circular(18)),
-                        child: TextField(
-                            keyboardType: TextInputType.text,
-                            onTap: () {},
-                            onSubmitted: (_) {},
-                            style: const TextStyle(
-                                fontFamily: "Bold",
-                                color: FONT_COLOR,
-                                fontSize: 14),
-                            textAlign: TextAlign.start,
-                            onChanged: (value) {},
-                            decoration: InputDecoration(
-                                focusColor: PRIMARY_COLOR,
-                                // ]),
-                                //suffixIcon: widget.suffixIcon,
-                                contentPadding: const EdgeInsets.only(
-                                    bottom: 18, top: 5, left: 10),
-                                border: InputBorder.none,
-                                // hintText: widget.hintText,
-                                hintStyle: const TextStyle(
-                                    fontFamily: "Bold",
-                                    color: FONT_COLOR,
-                                    fontSize: 14))),
+                        child: TextFormField(
+                          onEditingComplete: () => _addNewComment(
+                            commentPostController.text,
+                            widget.postUid,
+                          ),
+                          controller: commentPostController,
+                          keyboardType: TextInputType.text,
+                          validator: (value) {
+                            return inputValidator(value);
+                          },
+                          style: const TextStyle(
+                              fontFamily: "Bold",
+                              color: FONT_COLOR,
+                              fontSize: 14),
+                          textAlign: TextAlign.start,
+                          onChanged: (value) {},
+                          decoration: const InputDecoration(
+                            focusColor: PRIMARY_COLOR,
+                            // ]),
+                            //suffixIcon: widget.suffixIcon,
+                            contentPadding:
+                                EdgeInsets.only(bottom: 18, top: 5, left: 10),
+                            border: InputBorder.none,
+                            // hintText: widget.hintText,
+                            hintStyle: TextStyle(
+                              fontFamily: "Bold",
+                              color: FONT_COLOR,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
                       ),
-                      Divider(
+                      const Divider(
                         color: Color.fromRGBO(86, 134, 145, 1),
                       ),
                     ],
                   ))
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Commenter",
-                  style: TextStyle(
-                      color: FONT_COLOR, fontSize: 14, fontFamily: "Light")),
-              SizedBox(
-                width: 8,
-              ),
-              Icon(Icons.comment_outlined),
-            ],
+          GestureDetector(
+            onTap: () {
+              _addNewComment(
+                commentPostController.text,
+                widget.postUid,
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text("Commenter",
+                    style: TextStyle(
+                        color: FONT_COLOR, fontSize: 14, fontFamily: "Light")),
+                SizedBox(
+                  width: 8,
+                ),
+                Icon(Icons.comment_outlined),
+              ],
+            ),
           ),
         ],
       ),
     );
+  }
+
+  String? inputValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return " ";
+    }
+    return null;
   }
 }

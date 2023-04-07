@@ -2,19 +2,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:landflight/components/comment_popup.dart';
 import 'package:landflight/controller/ControllerComment.dart';
 import 'package:landflight/controller/LikePostController.dart';
 import 'package:landflight/utils/theme.dart';
+import 'package:landflight/vues/home/homepage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/agence.dart';
 import '../models/post.dart';
+import 'comment_list.dart';
 
 class CardPost extends StatefulWidget {
   Post monPost;
   Agence monAgence;
   var postDocId;
+
+  static var staticNberComments;
+  var nberComments = staticNberComments;
+
   CardPost({
     Key? key,
     required this.monPost,
@@ -45,18 +52,19 @@ class _CardPostState extends State<CardPost> {
   }
 
   Future<void> _savePrefsData(bool value) async {
-    i = i + 1;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasLiked', value);
   }
 
   @override
   Widget build(BuildContext context) {
+    CommentPopup.staticPostUid = widget.postDocId;
     LikePostController.like = widget.monPost.likes;
     final postLikes = Provider.of<LikePostController>(context);
     LikePostController.staticPostUid = widget.postDocId;
     final heigth = MediaQuery.of(context).size.height;
     final widht = MediaQuery.of(context).size.width;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.only(
@@ -101,7 +109,7 @@ class _CardPostState extends State<CardPost> {
                           Text(
                             widget.monAgence.nom,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: FONT_COLOR,
                                 fontSize: 14,
                                 fontFamily: "Bold"),
@@ -110,7 +118,7 @@ class _CardPostState extends State<CardPost> {
                           Text(
                             "il y’a ${DateTime.now().hour}",
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: FONT_COLOR,
                                 fontSize: 14,
                                 fontFamily: "Regular"),
@@ -124,7 +132,33 @@ class _CardPostState extends State<CardPost> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                            onPressed: () {}, icon: Icon(Icons.more_vert)),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("message"),
+                                    //  content: Text("Would you like to continue learning how to use Flutter alerts?"),
+                                    actions: [
+                                      TextButton(
+                                        child: Text("Voir les commentaires"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pushReplacement(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CommentList(
+                                                          postID: widget
+                                                              .postDocId)));
+                                        },
+                                      )
+                                    ],
+                                  );
+                                  ;
+                                },
+                              );
+                            },
+                            icon: Icon(Icons.more_vert)),
                       ],
                     ))
               ],
@@ -180,7 +214,7 @@ class _CardPostState extends State<CardPost> {
                 Text('${postLikes.like2} Likes',
                     style: const TextStyle(
                         color: FONT_COLOR, fontSize: 14, fontFamily: "Light")),
-                Text("10 commentaires",
+                Text("${widget.nberComments} commentaires",
                     style: TextStyle(
                         color: FONT_COLOR, fontSize: 14, fontFamily: "Light"))
               ],
@@ -207,29 +241,29 @@ class _CardPostState extends State<CardPost> {
                 children: [
                   Row(
                     children: [
-
-                      
                       GestureDetector(
                         onTap: () async {
-                          context.read<LikePostController>().onClickLike();
+                          if (!_hasLiked) {
+                            context.read<LikePostController>().onClickLike();
 
-                          setState(() {
-                            _hasLiked = postLikes.isLiked;
-                          });
+                            setState(() {
+                              _hasLiked = postLikes.isLiked;
+                            });
 
-                          await _savePrefsData(_hasLiked);
-                          //Update likes in post collection
-                          final docUser = FirebaseFirestore.instance
-                              .collection("post")
-                              .doc(widget.postDocId);
+                            await _savePrefsData(_hasLiked);
+                            //Update likes in post collection
+                            final docUser = FirebaseFirestore.instance
+                                .collection("post")
+                                .doc(widget.postDocId);
 
-                          _hasLiked
-                              ? postLikes.incrementLike(widget.postDocId)
-                              : postLikes.decrementLike();
+                            postLikes.incrementLike(widget.postDocId);
 
-                          docUser.update({
-                            'likes': postLikes.like2,
-                          });
+                            docUser.update({
+                              'likes': postLikes.like2,
+                            });
+                          }
+                          // print("Like = ${postLikes.isLiked}");
+                          //print("prefsLike = $_hasLiked");
 
                           //updatePost in the userID
 
@@ -247,7 +281,7 @@ class _CardPostState extends State<CardPost> {
                       ),
                       _hasLiked
                           ? const Text(
-                              "Dis-Likes",
+                              "Déjà aimée",
                               style: TextStyle(
                                   color: Colors.red,
                                   fontSize: 14,
@@ -272,11 +306,13 @@ class _CardPostState extends State<CardPost> {
                         SizedBox(
                           width: 8,
                         ),
-                        Text("Commenter",
-                            style: TextStyle(
-                                color: FONT_COLOR,
-                                fontSize: 14,
-                                fontFamily: "Light")),
+                        Text(
+                          "Commenter",
+                          style: TextStyle(
+                              color: FONT_COLOR,
+                              fontSize: 14,
+                              fontFamily: "Light"),
+                        ),
                       ],
                     ),
                   )

@@ -26,7 +26,7 @@ class LikePostController extends ChangeNotifier {
     final docUser = FirebaseFirestore.instance.collection("user").doc(userId);
     docUser.update({'likedPost': postID});
   }
-
+/*
   void decrementLike() {
     like2 = like2 - 1;
     notifyListeners();
@@ -34,5 +34,5 @@ class LikePostController extends ChangeNotifier {
     var userId = user!.uid;
     final docUser = FirebaseFirestore.instance.collection("user").doc(userId);
     docUser.update({'likedPost': ""});
-  }
+  }*/
 }

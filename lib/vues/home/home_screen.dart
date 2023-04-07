@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final widht = MediaQuery.of(context).size.width;
     return Scaffold(
         //   key: context.read<menuController>().scaffoldKey,
-        //drawer: SideMenu(),
+        drawer: SideMenu(),
         body: Container(
       width: widht,
       height: heigth,

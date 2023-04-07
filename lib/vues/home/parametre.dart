@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:landflight/controller/MenuController.dart';
 import 'package:landflight/utils/theme.dart';
+import 'package:landflight/vues/home/home_screen.dart';
+import 'package:landflight/vues/home/homepage.dart';
 import 'package:provider/provider.dart';
 
 class Parametre extends StatefulWidget {
@@ -37,7 +39,10 @@ class _ParametreState extends State<Parametre> {
                   children: [
                     IconButton(
                         onPressed: () {
-                          context.read<menuController>().controlMenu();
+                          //  context.read<menuController>().controlMenu();
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()));
                         },
                         icon: Icon(
                           Icons.arrow_back_ios,

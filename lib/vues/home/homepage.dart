@@ -222,6 +222,7 @@ class _HomePageState extends State<HomePage> {
                           final String description = data['description'];
                           final likes = data['likes'];
                           final String titre = data['titre'];
+                          CardPost.staticNberComments = data["comments"].length;
                           final DocAgenceId = data['agenceId'] as String;
                           //final datePost = data['datePost'] as String;
                           return StreamBuilder<DocumentSnapshot>(
