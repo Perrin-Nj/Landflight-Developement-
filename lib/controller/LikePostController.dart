@@ -18,13 +18,15 @@ class LikePostController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void incrementLike(var postID) {
+  int incrementLike(var postID) {
     like2 = like2 + 1;
-    notifyListeners();
+
     //  print(user!.uid);
     var userId = user!.uid;
     final docUser = FirebaseFirestore.instance.collection("user").doc(userId);
-    docUser.update({'likedPost': postID});
+    docUser.update({'likedPosts':  FieldValue.arrayUnion([postID]),});
+    notifyListeners();
+    return like2;
   }
 /*
   void decrementLike() {
@@ -35,4 +37,5 @@ class LikePostController extends ChangeNotifier {
     final docUser = FirebaseFirestore.instance.collection("user").doc(userId);
     docUser.update({'likedPost': ""});
   }*/
+
 }

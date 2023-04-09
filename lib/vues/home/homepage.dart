@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:landflight/components/card_post.dart';
 import 'package:landflight/components/comment_popup.dart';
 import 'package:landflight/components/search_popup.dart';
+import 'package:landflight/components/showCommentPopUp.dart';
 import 'package:landflight/controller/ControllerComment.dart';
 import 'package:landflight/controller/MenuController.dart';
 import 'package:landflight/controller/SearchController.dart';
@@ -22,8 +23,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool SearchOpen =
-      false; // si la barre de recherche est devoiler par defaut il est fermer
+  bool SearchOpen = false;
+
+  // si la barre de recherche est devoiler par defaut il est fermer
 
   /* Stream<QuerySnapshot> agencyDocStream = FirebaseFirestore.instance
       .collection('agence')
@@ -32,11 +34,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var docPostId;
     final heigth = MediaQuery.of(context).size.height;
     final widht = MediaQuery.of(context).size.width;
     final search = context.watch<SearchController>();
-    final comment = context.watch<CommentController>();
+
     return Scaffold(
       body: SafeArea(
           child: Container(
@@ -166,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                     builder: (context, snapshot1) {
                       if (snapshot1.hasError) {
                         return Text(
-                          "Désolé, Une erreur s'est produite:\n snap1Error : ${snapshot1.error} ",
+                          "Désolé, Une erreur s'est produite:\n : ${snapshot1.error} ",
                         );
                       }
                       if (snapshot1.connectionState ==
@@ -213,18 +214,21 @@ class _HomePageState extends State<HomePage> {
                         itemCount: documents.length,
                         itemBuilder: (BuildContext context, int index) {
                           final DocumentSnapshot document = documents[index];
-                          docPostId = document.id;
+
                           final Map<String, dynamic> data =
                               document.data()! as Map<String, dynamic>;
                           final String name = data['titre'] as String;
                           final String imageUrl = data['imageUrl'] as String;
-                          final datePost = data['datePost'] as String;
+                          final String postID = data['id'] as String;
+                          final datePost = data['datePost'].toDate();
                           final String description = data['description'];
                           final likes = data['likes'];
                           final String titre = data['titre'];
-                          CardPost.staticNberComments = data["comments"].length;
+                          final int NberComments = data["comments"].length;
                           final DocAgenceId = data['agenceId'] as String;
+                          final List commentaires = data["comments"] as List;
                           //final datePost = data['datePost'] as String;
+                         
                           return StreamBuilder<DocumentSnapshot>(
                             stream: FirebaseFirestore.instance
                                 .collection('agence')
@@ -266,13 +270,16 @@ class _HomePageState extends State<HomePage> {
                               );
 
                               return CardPost(
-                                postDocId: docPostId,
                                 monPost: Post(
+                                  id: postID,
+                                  hasLiked: false,
+                                  nberComments: NberComments,
                                   datePost: datePost,
                                   imageUrl: imageUrl,
                                   description: description,
                                   likes: likes,
                                   agenceId: DocAgenceId,
+                                  comments: commentaires,
                                 ),
                                 monAgence: monAgence,
                               );
@@ -327,11 +334,6 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.topCenter,
                 child: SearchPoppUP(),
               ),
-            if (comment.iscomment)
-              Align(
-                alignment: Alignment.topCenter,
-                child: CommentPopup(),
-              )
           ],
         ),
       )),

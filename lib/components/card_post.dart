@@ -3,30 +3,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:landflight/components/comment_popup.dart';
+import 'package:landflight/components/showCommentPopUp.dart';
 import 'package:landflight/controller/ControllerComment.dart';
 import 'package:landflight/controller/LikePostController.dart';
 import 'package:landflight/utils/theme.dart';
 import 'package:landflight/vues/home/homepage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dynamic_extension.dart';
 import '../models/agence.dart';
 import '../models/post.dart';
 import 'comment_list.dart';
+import 'package:intl/intl.dart';
 
 class CardPost extends StatefulWidget {
   Post monPost;
   Agence monAgence;
-  var postDocId;
-
-  static var staticNberComments;
-  var nberComments = staticNberComments;
 
   CardPost({
     Key? key,
     required this.monPost,
     required this.monAgence,
-    required this.postDocId,
   }) : super(key: key);
 
   @override
@@ -34,16 +31,27 @@ class CardPost extends StatefulWidget {
 }
 
 class _CardPostState extends State<CardPost> {
-  bool _hasLiked = false;
+  var likedPosts = [];
 
   @override
   void initState() {
     super.initState();
-    _loadSavedPrefsData();
+    /* _loadSavedPrefsData();*/
+
+    final User? CurrentUser = FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('user')
+        .doc(CurrentUser!.uid)
+        .snapshots()
+        .listen((DocumentSnapshot documentSnapshot) {
+      likedPosts = documentSnapshot.data()['likedPosts'];
+      widget.monPost.hasLiked = likedPosts.contains(widget.monPost.id);
+      setState(() {});
+    });
   }
 
   int i = 0;
-  Future<void> _loadSavedPrefsData() async {
+  /*Future<void> _loadSavedPrefsData() async {
     final prefs = await SharedPreferences.getInstance();
 
     setState(() {
@@ -55,15 +63,19 @@ class _CardPostState extends State<CardPost> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasLiked', value);
   }
-
+*/
   @override
   Widget build(BuildContext context) {
-    CommentPopup.staticPostUid = widget.postDocId;
+    //CommentPopup.staticPostUid = widget.monPost.id;
+    final comment = context.watch<CommentController>();
     LikePostController.like = widget.monPost.likes;
     final postLikes = Provider.of<LikePostController>(context);
-    LikePostController.staticPostUid = widget.postDocId;
+    LikePostController.staticPostUid = widget.monPost.id;
     final heigth = MediaQuery.of(context).size.height;
     final widht = MediaQuery.of(context).size.width;
+
+    int postedDifference =
+        DateTime.now().difference(widget.monPost.datePost).inHours;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -95,37 +107,55 @@ class _CardPostState extends State<CardPost> {
                     widget.monAgence.profileUrl,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Expanded(
-                    flex: 4,
-                    child: Container(
-                      height: 40,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            widget.monAgence.nom,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: FONT_COLOR,
-                                fontSize: 14,
-                                fontFamily: "Bold"),
-                          ),
-                          //TODO
-                          Text(
-                            "il y’a ${DateTime.now().hour}",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                color: FONT_COLOR,
-                                fontSize: 14,
-                                fontFamily: "Regular"),
-                          ),
-                        ],
-                      ),
-                    )),
+                  flex: 4,
+                  child: Container(
+                    height: 40,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          widget.monAgence.nom,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              color: FONT_COLOR,
+                              fontSize: 14,
+                              fontFamily: "Bold"),
+                        ),
+                        postedDifference == 0 || postedDifference == 1
+                            ? const Text(
+                                "il y’a moins d'une heure",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: FONT_COLOR,
+                                    fontSize: 14,
+                                    fontFamily: "Regular"),
+                              )
+                            : postedDifference < 25
+                                ? Text(
+                                    "il y’a $postedDifference heures",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        color: FONT_COLOR,
+                                        fontSize: 14,
+                                        fontFamily: "Regular"),
+                                  )
+                                : const Text(
+                                    "il y’a plus d'un jour",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: FONT_COLOR,
+                                        fontSize: 14,
+                                        fontFamily: "Regular"),
+                                  ),
+                      ],
+                    ),
+                  ),
+                ),
                 Container(
                     height: 60,
                     child: Column(
@@ -137,24 +167,26 @@ class _CardPostState extends State<CardPost> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text("message"),
+                                    title: const Text("message"),
                                     //  content: Text("Would you like to continue learning how to use Flutter alerts?"),
                                     actions: [
                                       TextButton(
-                                        child: Text("Voir les commentaires"),
+                                        child:
+                                            const Text("Voir les commentaires"),
                                         onPressed: () {
                                           Navigator.of(context).pop();
+
                                           Navigator.of(context).pushReplacement(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CommentList(
-                                                          postID: widget
-                                                              .postDocId)));
+                                            MaterialPageRoute(
+                                              builder: (context) => CommentList(
+                                                postID: widget.monPost.id,
+                                              ),
+                                            ),
+                                          );
                                         },
                                       )
                                     ],
                                   );
-                                  ;
                                 },
                               );
                             },
@@ -211,11 +243,11 @@ class _CardPostState extends State<CardPost> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('${postLikes.like2} Likes',
+                Text('${widget.monPost.likes} Likes',
                     style: const TextStyle(
                         color: FONT_COLOR, fontSize: 14, fontFamily: "Light")),
-                Text("${widget.nberComments} commentaires",
-                    style: TextStyle(
+                Text("${widget.monPost.nberComments} commentaires",
+                    style: const TextStyle(
                         color: FONT_COLOR, fontSize: 14, fontFamily: "Light"))
               ],
             ),
@@ -239,66 +271,108 @@ class _CardPostState extends State<CardPost> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          if (!_hasLiked) {
-                            context.read<LikePostController>().onClickLike();
-
-                            setState(() {
-                              _hasLiked = postLikes.isLiked;
-                            });
-
-                            await _savePrefsData(_hasLiked);
-                            //Update likes in post collection
-                            final docUser = FirebaseFirestore.instance
-                                .collection("post")
-                                .doc(widget.postDocId);
-
-                            postLikes.incrementLike(widget.postDocId);
-
-                            docUser.update({
-                              'likes': postLikes.like2,
-                            });
-                          }
-                          // print("Like = ${postLikes.isLiked}");
-                          //print("prefsLike = $_hasLiked");
-
-                          //updatePost in the userID
-
-                          //  print(userId);
-                        },
-                        child: _hasLiked
-                            ? const Icon(
+                  widget.monPost.hasLiked == false &&
+                          likedPosts.contains(widget.monPost.id)
+                      ? Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                const Tooltip(
+                                  message:
+                                      "Vous avez déjà aimé ce post, modifiez votre choix dans la page des favoris.",
+                                );
+                              },
+                              child: const Icon(
                                 Icons.favorite,
                                 color: Colors.red,
-                              )
-                            : const Icon(Icons.favorite_border),
-                      ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      _hasLiked
-                          ? const Text(
-                              "Déjà aimée",
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            const Text(
+                              "Déjà aimé",
                               style: TextStyle(
                                   color: Colors.red,
                                   fontSize: 14,
                                   fontFamily: "Light"),
                             )
-                          : const Text(
-                              "Likes",
-                              style: TextStyle(
-                                  color: FONT_COLOR,
-                                  fontSize: 14,
-                                  fontFamily: "Light"),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                if (!widget.monPost.hasLiked ||
+                                    !likedPosts.contains(widget.monPost.id)) {
+                                  context
+                                      .read<LikePostController>()
+                                      .onClickLike();
+
+                                  setState(() {
+                                    widget.monPost.hasLiked = postLikes.isLiked;
+                                  });
+
+                                  //Update likes in post collection
+                                  final docUser = FirebaseFirestore.instance
+                                      .collection("post")
+                                      .doc(widget.monPost.id);
+
+                                  int total_likes = postLikes
+                                      .incrementLike(widget.monPost.id);
+
+                                  docUser.update({
+                                    'likes': total_likes,
+                                  });
+                                }
+                                // print("Like = ${postLikes.isLiked}");
+                                //print("prefsLike = $_hasLiked");
+
+                                //updatePost in the userID
+
+                                //  print(userId);
+                              },
+                              child: widget.monPost.hasLiked ||
+                                      likedPosts.contains(widget.monPost.id)
+                                  ? const Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                    )
+                                  : const Icon(Icons.favorite_border),
                             ),
-                    ],
-                  ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            widget.monPost.hasLiked ||
+                                    likedPosts.contains(widget.monPost.id)
+                                ? const Text(
+                                    "Déjà aimée",
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 14,
+                                        fontFamily: "Light"),
+                                  )
+                                : const Text(
+                                    "Likes",
+                                    style: TextStyle(
+                                        color: FONT_COLOR,
+                                        fontSize: 14,
+                                        fontFamily: "Light"),
+                                  ),
+                          ],
+                        ),
                   GestureDetector(
                     onTap: () {
                       context.read<CommentController>().open();
+                      if (comment.iscomment) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => ShowCommentPopUp(
+                              postID: widget.monPost.id,
+                            ),
+                          ),
+                        );
+                      }
                     },
                     child: Row(
                       children: const [
@@ -315,7 +389,7 @@ class _CardPostState extends State<CardPost> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               )),
         ],

@@ -6,8 +6,8 @@ class Input extends StatefulWidget {
   Widget suffixIcon, prefixIcon;
   bool? isTel;
   TextEditingController inputController;
-  Function onTapInput;
-  Function onChangedInput;
+  //Function onTapInput;
+ // Function onChangedInput;
   Function inputValidator;
   Input({
     Key? key,
@@ -16,8 +16,8 @@ class Input extends StatefulWidget {
     required this.prefixIcon,
     required this.suffixIcon,
     required this.inputController,
-    required this.onChangedInput,
-    required this.onTapInput,
+  //  required this.onChangedInput,
+  //  required this.onTapInput,
     required this.inputValidator,
   }) : super(key: key);
 
@@ -37,7 +37,7 @@ class _InputState extends State<Input> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               keyboardType: TextInputType.text,
               controller: widget.inputController,
-              onTap: () => widget.onTapInput(),
+             /* onTap: () => widget.onTapInput(),*/
               validator: (value) {
                 return widget.inputValidator(value);
               },
@@ -47,9 +47,9 @@ class _InputState extends State<Input> {
                 fontSize: 14,
               ),
               textAlign: TextAlign.start,
-              onChanged: (value) {
+            /*  onChanged: (value) {
                 widget.onChangedInput;
-              },
+              },*/
               decoration: InputDecoration(
                   prefixIcon: widget.prefixIcon,
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:landflight/utils/theme.dart';
 import '../vues/home/home_screen.dart';
 import 'dynamic_extension.dart';
 
 class CommentList extends StatelessWidget {
-  final String postID;
+  String postID;
 
   CommentList({required this.postID});
 
@@ -12,7 +13,7 @@ class CommentList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AlertDialog(
-        title: Text("Comments"),
+        title: Text("Commentaires sur l'agence"),
         content: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
               .collection('post')
@@ -36,7 +37,21 @@ class CommentList extends StatelessWidget {
             return SingleChildScrollView(
               child: ListBody(
                 children: comments.map((comment) {
-                  return Text(comment);
+                  return Card(
+                    color: Colors.green[50],
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: const BorderSide(
+                        color: Colors.white,
+                        width: 1,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(comment),
+                    ),
+                  );
                 }).toList(),
               ),
             );

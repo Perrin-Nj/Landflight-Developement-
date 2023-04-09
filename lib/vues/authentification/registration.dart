@@ -119,8 +119,8 @@ class _RegisterState extends State<Register> {
                 Input(
                   inputController: nomController,
                   inputValidator: nomValidator,
-                  onChangedInput: onChangeNom,
-                  onTapInput: onTapNom,
+                 // onChangedInput: onChangeNom,
+                 // onTapInput: onTapNom,
                   isTel: false,
                   hintText: "Nom",
                   prefixIcon: Icon(Icons.person_outlined),
@@ -132,8 +132,8 @@ class _RegisterState extends State<Register> {
                 Input(
                     inputController: emailController,
                     inputValidator: validateEmail,
-                    onChangedInput: onChangeEmail,
-                    onTapInput: onTapEmail,
+                   // onChangedInput: onChangeEmail,
+                 //   onTapInput: onTapEmail,
                     isTel: false,
                     hintText: "Email",
                     prefixIcon: Icon(Icons.mail_outline),
@@ -144,8 +144,8 @@ class _RegisterState extends State<Register> {
                 Input(
                     inputController: motdepasseController,
                     inputValidator: motdepasseValidator,
-                    onChangedInput: onChangeMotdepasse,
-                    onTapInput: onTapMotdepasse,
+                    //onChangedInput: onChangeMotdepasse,
+                    //onTapInput: onTapMotdepasse,
                     isTel: false,
                     hintText: "Mot de passe",
                     prefixIcon: Icon(Icons.lock_outline),

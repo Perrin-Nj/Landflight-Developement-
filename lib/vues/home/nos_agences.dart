@@ -116,7 +116,9 @@ class _NosAgencesState extends State<NosAgences> {
             if (comment.iscomment)
               Align(
                 alignment: Alignment.topCenter,
-                child: CommentPopup(),
+                child: CommentPopup(
+                  postID: "",
+                ),
               )
           ],
         ),

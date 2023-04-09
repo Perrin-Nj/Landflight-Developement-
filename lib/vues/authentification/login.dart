@@ -93,9 +93,9 @@ class _LoginState extends State<Login> {
             child: Column(
               children: [
                 Input(
-                    onTapInput: onTapNom,
+                   // onTapInput: onTapNom,
                     inputValidator: nomValidator,
-                    onChangedInput: onChangeNom,
+                    //onChangedInput: onChangeNom,
                     inputController: nomController,
                     isTel: false,
                     hintText: "Email",
@@ -105,9 +105,9 @@ class _LoginState extends State<Login> {
                   height: 18,
                 ),
                 Input(
-                  onTapInput: onTapMotdepasse,
+                //  onTapInput: onTapMotdepasse,
                   inputValidator: motdepasseValidator,
-                  onChangedInput: onChangeMotdepasse,
+                  //onChangedInput: onChangeMotdepasse,
                   inputController: motdepasseController,
                   isTel: false,
                   hintText: "Mot de passe",
@@ -261,18 +261,13 @@ class _LoginState extends State<Login> {
 
   Future<void> _loginWithFacebook() async {
     // SmartDialog.showLoading();
-    debugPrint("hi there 1-°");
     try {
-      print("hi there 1");
       final facebookLoginResult = await FacebookAuth.instance.login();
-      print("hi there 2");
       final userData = await FacebookAuth.instance.getUserData();
-      print("hi there 3");
 
       final facebookAuthCredential = FacebookAuthProvider.credential(
         facebookLoginResult.accessToken!.token,
       );
-      print("hi there 4");
       await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
       await FirebaseFirestore.instance.collection('user').add({
         'email': userData['email'],

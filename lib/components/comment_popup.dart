@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:landflight/controller/ControllerComment.dart';
 import 'package:landflight/utils/theme.dart';
+import 'package:landflight/vues/home/homepage.dart';
 import 'package:provider/provider.dart';
 
 class CommentPopup extends StatefulWidget {
-  static var staticPostUid;
-  var postUid = staticPostUid;
+  String postID;
 
-  CommentPopup({Key? key}) : super(key: key);
+  CommentPopup({Key? key, required this.postID}) : super(key: key);
 
   @override
   State<CommentPopup> createState() => _CommentPopupState();
@@ -37,7 +37,7 @@ class _CommentPopupState extends State<CommentPopup> {
       context.read<CommentController>().close();
     } else {
       SmartDialog.showToast(
-        "Ajoutez un commentaire, s'il vous plait",
+        "Aucun commenntaire ajouté",
         displayTime: const Duration(seconds: 1),
       );
     }
@@ -71,6 +71,11 @@ class _CommentPopupState extends State<CommentPopup> {
               child: GestureDetector(
                   onTap: () {
                     context.read<CommentController>().close();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(),
+                      ),
+                    );
                   },
                   child: Icon(Icons.close))),
           const SizedBox(
@@ -99,7 +104,7 @@ class _CommentPopupState extends State<CommentPopup> {
                         child: TextFormField(
                           onEditingComplete: () => _addNewComment(
                             commentPostController.text,
-                            widget.postUid,
+                            widget.postID,
                           ),
                           controller: commentPostController,
                           keyboardType: TextInputType.text,
@@ -139,7 +144,12 @@ class _CommentPopupState extends State<CommentPopup> {
             onTap: () {
               _addNewComment(
                 commentPostController.text,
-                widget.postUid,
+                widget.postID,
+              );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => HomePage(),
+                ),
               );
             },
             child: Row(
