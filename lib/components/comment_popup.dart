@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:landflight/controller/ControllerComment.dart';
 import 'package:landflight/utils/theme.dart';
+import 'package:landflight/vues/home/home_screen.dart';
 import 'package:landflight/vues/home/homepage.dart';
 import 'package:provider/provider.dart';
 
@@ -73,7 +74,7 @@ class _CommentPopupState extends State<CommentPopup> {
                     context.read<CommentController>().close();
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => HomePage(),
+                        builder: (context) => HomeScreen(),
                       ),
                     );
                   },
@@ -148,7 +149,7 @@ class _CommentPopupState extends State<CommentPopup> {
               );
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => HomePage(),
+                  builder: (context) => HomeScreen(),
                 ),
               );
             },

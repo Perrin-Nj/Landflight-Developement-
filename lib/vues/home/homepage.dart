@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                         color: WHITE_COLOR,
                       )),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 32,
                 ),
                 /*  Padding(
@@ -210,6 +210,7 @@ class _HomePageState extends State<HomePage> {
                           snapshot1.data!.docs;
 
                       return ListView.builder(
+                        scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: documents.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -228,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                           final DocAgenceId = data['agenceId'] as String;
                           final List commentaires = data["comments"] as List;
                           //final datePost = data['datePost'] as String;
-                         
+
                           return StreamBuilder<DocumentSnapshot>(
                             stream: FirebaseFirestore.instance
                                 .collection('agence')
@@ -243,9 +244,9 @@ class _HomePageState extends State<HomePage> {
 
                               if (snapshot2.connectionState ==
                                   ConnectionState.waiting) {
-                                return Visibility(
+                                return const Visibility(
                                     visible: false,
-                                    child: const CircularProgressIndicator());
+                                    child: CircularProgressIndicator());
                               }
 
                               var data2 = snapshot2.data!.data()
@@ -269,7 +270,8 @@ class _HomePageState extends State<HomePage> {
                                 profileUrl: profilAgence,
                               );
 
-                              return CardPost(
+                              return 
+                              CardPost(
                                 monPost: Post(
                                   id: postID,
                                   hasLiked: false,

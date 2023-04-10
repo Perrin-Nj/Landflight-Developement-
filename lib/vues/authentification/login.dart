@@ -9,6 +9,7 @@ import 'package:landflight/vues/authentification/mot_de_passe_oublie.dart';
 import 'package:landflight/vues/authentification/registration.dart';
 import 'package:landflight/vues/home/home_screen.dart';
 import 'package:landflight/utils/theme.dart';
+import 'package:landflight/vues/home/homepage.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -64,7 +65,7 @@ class _LoginState extends State<Login> {
       if (passNonNullValue.isEmpty) {
         return ("Mot de passe requis");
       } else if (passNonNullValue.length < 5) {
-        return ("Le mot de passe doit dépasser 4 charactéres");
+        return ("Le mot de passe doit dépasser 4 caractéres");
       } else if (!regex.hasMatch(passNonNullValue)) {
         return ("Le mot de passe doit contenir des charactéres majuscules, minuscules, au moins un nombre et un charactére spécial ");
       }
@@ -93,7 +94,7 @@ class _LoginState extends State<Login> {
             child: Column(
               children: [
                 Input(
-                   // onTapInput: onTapNom,
+                    // onTapInput: onTapNom,
                     inputValidator: nomValidator,
                     //onChangedInput: onChangeNom,
                     inputController: nomController,
@@ -105,7 +106,7 @@ class _LoginState extends State<Login> {
                   height: 18,
                 ),
                 Input(
-                //  onTapInput: onTapMotdepasse,
+                  //  onTapInput: onTapMotdepasse,
                   inputValidator: motdepasseValidator,
                   //onChangedInput: onChangeMotdepasse,
                   inputController: motdepasseController,
@@ -268,26 +269,39 @@ class _LoginState extends State<Login> {
       final facebookAuthCredential = FacebookAuthProvider.credential(
         facebookLoginResult.accessToken!.token,
       );
-      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-      await FirebaseFirestore.instance.collection('user').add({
-        'email': userData['email'],
-        'name': userData['name'],
-        'phone': userData['phone'],
-        'numero_cni': int.parse("0"),
-      });
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
+      final User? user = FirebaseAuth.instance.currentUser;
+      UserCredential userc = await FirebaseAuth.instance
+          .signInWithCredential(facebookAuthCredential);
+
+      await FirebaseFirestore.instance
+          .collection('user')
+          .doc(userc.user!.uid)
+          .set({
+            'email': userData['email'],
+            'name': userData['name'],
+            'phone': userData['phoneNumber'],
+            'numero_cni': int.parse("0"),
+            'likedPosts': [],
+          })
+          .then((value) => SmartDialog.showNotify(
+              msg: "Connecté en tant que: ${userData['email']}",
+              notifyType: NotifyType.success))
+          .catchError((error) => print("Failed to add user: $error"));
+
+      SmartDialog.showNotify(
+          msg: "Connecté en tant que: ${userData['email']}",
+          notifyType: NotifyType.success);
+
+      // ignore: use_build_context_synchronously
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
+      }
       SmartDialog.dismiss();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.green,
-          content: Text("Connecté en tant que: ${userData['email']}"),
-        ),
-      );
     } on FirebaseAuthException catch (e) {
       var contenuErreur = "";
       switch (e.code) {

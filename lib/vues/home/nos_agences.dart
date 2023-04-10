@@ -8,7 +8,10 @@ import 'package:landflight/controller/ControllerComment.dart';
 import 'package:landflight/controller/MenuController.dart';
 import 'package:landflight/controller/SearchController.dart';
 import 'package:landflight/utils/theme.dart';
+import 'package:landflight/vues/home/home_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'homepage.dart';
 
 class NosAgences extends StatefulWidget {
   NosAgences({Key? key}) : super(key: key);
@@ -41,7 +44,7 @@ class _NosAgencesState extends State<NosAgences> {
                     alignment: Alignment.centerLeft,
                     height: 50,
                     width: widht,
-                    decoration: BoxDecoration(
+                    decoration:const  BoxDecoration(
                         color: PRIMARY_COLOR,
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(20),
@@ -50,7 +53,12 @@ class _NosAgencesState extends State<NosAgences> {
                       children: [
                         IconButton(
                             onPressed: () {
-                              context.read<menuController>().controlMenu();
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => HomeScreen(),
+                                ),
+                              );
+                              // context.read<menuController>().controlMenu();
                             },
                             icon: Icon(
                               Icons.arrow_back_ios,
