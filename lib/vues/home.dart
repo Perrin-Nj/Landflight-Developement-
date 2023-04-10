@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:landflight/vues/commandeBilletBus/paiement_voyage.dart';
 import 'package:landflight/vues/monCompte/mon_compte.dart';
 
 class Home extends StatelessWidget {
@@ -21,7 +22,12 @@ class Home extends StatelessWidget {
                 onPressed: () {
                   goToMonCompte(context);
                 },
-                child: Text("edit Profile"))
+                child: Text("edit Profile")),
+            TextButton(
+                onPressed: () {
+                  goToPayTicket(context);
+                },
+                child: Text("pay ticket"))
           ],
         ),
       ),
@@ -31,5 +37,10 @@ class Home extends StatelessWidget {
   goToMonCompte(BuildContext context) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => MonCompte()));
+  }
+
+  goToPayTicket(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CommandeBillet()));
   }
 }
