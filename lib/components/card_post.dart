@@ -246,9 +246,22 @@ class _CardPostState extends State<CardPost> {
                 Text('${widget.monPost.likes} Likes',
                     style: const TextStyle(
                         color: FONT_COLOR, fontSize: 14, fontFamily: "Light")),
-                Text("${widget.monPost.nberComments} commentaires",
-                    style: const TextStyle(
-                        color: FONT_COLOR, fontSize: 14, fontFamily: "Light"))
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => CommentList(
+                          postID: widget.monPost.id,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text("${widget.monPost.nberComments} commentaires",
+                      style: const TextStyle(
+                          color: FONT_COLOR,
+                          fontSize: 14,
+                          fontFamily: "Light")),
+                )
               ],
             ),
           ),

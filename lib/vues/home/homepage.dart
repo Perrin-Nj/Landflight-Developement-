@@ -25,6 +25,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool SearchOpen = false;
 
+  ScrollController scrolControl = ScrollController();
+
   // si la barre de recherche est devoiler par defaut il est fermer
 
   /* Stream<QuerySnapshot> agencyDocStream = FirebaseFirestore.instance
@@ -209,85 +211,88 @@ class _HomePageState extends State<HomePage> {
                       final List<DocumentSnapshot> documents =
                           snapshot1.data!.docs;
 
-                      return ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: documents.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final DocumentSnapshot document = documents[index];
+                      return SingleChildScrollView(
+                        controller: scrolControl,
+                        child: ListView.builder(
+                          controller: scrolControl,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: documents.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final DocumentSnapshot document = documents[index];
 
-                          final Map<String, dynamic> data =
-                              document.data()! as Map<String, dynamic>;
-                          final String name = data['titre'] as String;
-                          final String imageUrl = data['imageUrl'] as String;
-                          final String postID = data['id'] as String;
-                          final datePost = data['datePost'].toDate();
-                          final String description = data['description'];
-                          final likes = data['likes'];
-                          final String titre = data['titre'];
-                          final int NberComments = data["comments"].length;
-                          final DocAgenceId = data['agenceId'] as String;
-                          final List commentaires = data["comments"] as List;
-                          //final datePost = data['datePost'] as String;
+                            final Map<String, dynamic> data =
+                                document.data()! as Map<String, dynamic>;
+                            final String name = data['titre'] as String;
+                            final String imageUrl = data['imageUrl'] as String;
+                            final String postID = data['id'] as String;
+                            final datePost = data['datePost'].toDate();
+                            final String description = data['description'];
+                            final likes = data['likes'];
+                            final String titre = data['titre'];
+                            final int NberComments = data["comments"].length;
+                            final DocAgenceId = data['agenceId'] as String;
+                            final List commentaires = data["comments"] as List;
+                            //final datePost = data['datePost'] as String;
 
-                          return StreamBuilder<DocumentSnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('agence')
-                                .doc(DocAgenceId.trim())
-                                .snapshots(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<DocumentSnapshot> snapshot2) {
-                              if (snapshot2.hasError) {
-                                return Text(
-                                    "Désolé, une erreur s'est produite");
-                              }
+                            return StreamBuilder<DocumentSnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('agence')
+                                  .doc(DocAgenceId.trim())
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DocumentSnapshot> snapshot2) {
+                                if (snapshot2.hasError) {
+                                  return Text(
+                                      "Désolé, une erreur s'est produite");
+                                }
 
-                              if (snapshot2.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Visibility(
-                                    visible: false,
-                                    child: CircularProgressIndicator());
-                              }
+                                if (snapshot2.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Visibility(
+                                      visible: false,
+                                      child: CircularProgressIndicator());
+                                }
 
-                              var data2 = snapshot2.data!.data()
-                                  as Map<String, dynamic>;
-                              final String addresse =
-                                  data2['addresse'] as String;
-                              final String descriptionAgence =
-                                  data2['description'] as String;
-                              final int idAgence = data2['id'];
-                              final String localisation =
-                                  data2['localisation'] as String;
-                              final String nomAgence = data2['nom'] as String;
-                              final profilAgence =
-                                  data2['profileUrl'] as String;
+                                var data2 = snapshot2.data!.data()
+                                    as Map<String, dynamic>;
+                                final String addresse =
+                                    data2['addresse'] as String;
+                                final String descriptionAgence =
+                                    data2['description'] as String;
+                                final int idAgence = data2['id'];
+                                final String localisation =
+                                    data2['localisation'] as String;
+                                final String nomAgence = data2['nom'] as String;
+                                final profilAgence =
+                                    data2['profileUrl'] as String;
 
-                              Agence monAgence = Agence(
-                                nom: nomAgence,
-                                description: descriptionAgence,
-                                addresse: addresse,
-                                localisation: localisation,
-                                profileUrl: profilAgence,
-                              );
+                                Agence monAgence = Agence(
+                                  nom: nomAgence,
+                                  description: descriptionAgence,
+                                  addresse: addresse,
+                                  localisation: localisation,
+                                  profileUrl: profilAgence,
+                                );
 
-                              return 
-                              CardPost(
-                                monPost: Post(
-                                  id: postID,
-                                  hasLiked: false,
-                                  nberComments: NberComments,
-                                  datePost: datePost,
-                                  imageUrl: imageUrl,
-                                  description: description,
-                                  likes: likes,
-                                  agenceId: DocAgenceId,
-                                  comments: commentaires,
-                                ),
-                                monAgence: monAgence,
-                              );
-                            },
-                          );
-                        },
+                                return CardPost(
+                                  monPost: Post(
+                                    id: postID,
+                                    hasLiked: false,
+                                    nberComments: NberComments,
+                                    datePost: datePost,
+                                    imageUrl: imageUrl,
+                                    description: description,
+                                    likes: likes,
+                                    agenceId: DocAgenceId,
+                                    comments: commentaires,
+                                  ),
+                                  monAgence: monAgence,
+                                );
+                              },
+                            );
+                          },
+                        ),
                       );
                     },
                   ),

@@ -6,8 +6,9 @@ class Input extends StatefulWidget {
   Widget suffixIcon, prefixIcon;
   bool? isTel;
   TextEditingController inputController;
+  final bool isPassword;
   //Function onTapInput;
- // Function onChangedInput;
+  // Function onChangedInput;
   Function inputValidator;
   Input({
     Key? key,
@@ -16,8 +17,9 @@ class Input extends StatefulWidget {
     required this.prefixIcon,
     required this.suffixIcon,
     required this.inputController,
-  //  required this.onChangedInput,
-  //  required this.onTapInput,
+    required this.isPassword,
+    //  required this.onChangedInput,
+    //  required this.onTapInput,
     required this.inputValidator,
   }) : super(key: key);
 
@@ -30,37 +32,76 @@ class _InputState extends State<Input> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: 40,
-          color: WHITE_COLOR,
-          child: TextFormField(
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              keyboardType: TextInputType.text,
-              controller: widget.inputController,
-             /* onTap: () => widget.onTapInput(),*/
-              validator: (value) {
-                return widget.inputValidator(value);
-              },
-              style: const TextStyle(
-                fontFamily: "Bold",
-                color: FONT_COLOR,
-                fontSize: 14,
-              ),
-              textAlign: TextAlign.start,
-            /*  onChanged: (value) {
+        !widget.isPassword
+            ? Container(
+                height: 40,
+                color: WHITE_COLOR,
+                child: TextFormField(
+                    enableSuggestions: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    keyboardType: TextInputType.emailAddress,
+                    controller: widget.inputController,
+                    /* onTap: () => widget.onTapInput(),*/
+                    validator: (value) {
+                      return widget.inputValidator(value);
+                    },
+                    style: const TextStyle(
+                      fontFamily: "Bold",
+                      color: FONT_COLOR,
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.start,
+                    /*  onChanged: (value) {
                 widget.onChangedInput;
               },*/
-              decoration: InputDecoration(
-                  prefixIcon: widget.prefixIcon,
+                    decoration: InputDecoration(
+                        prefixIcon: widget.prefixIcon,
 
-                  // ]),
-                  suffixIcon: widget.suffixIcon,
-                  contentPadding: const EdgeInsets.all(12),
-                  // border: InputBorder(),
-                  hintText: widget.hintText,
-                  hintStyle: const TextStyle(
-                      fontFamily: "Bold", color: FONT_COLOR, fontSize: 14))),
-        ),
+                        // ]),
+                        suffixIcon: widget.suffixIcon,
+                        contentPadding: const EdgeInsets.all(12),
+                        // border: InputBorder(),
+                        hintText: widget.hintText,
+                        hintStyle: const TextStyle(
+                            fontFamily: "Bold",
+                            color: FONT_COLOR,
+                            fontSize: 14))),
+              )
+            : Container(
+                height: 60,
+                color: WHITE_COLOR,
+                child: TextFormField(
+                    enableSuggestions: true,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    keyboardType: TextInputType.visiblePassword,
+                    controller: widget.inputController,
+                    /* onTap: () => widget.onTapInput(),*/
+                    validator: (value) {
+                      return widget.inputValidator(value);
+                    },
+                    style: const TextStyle(
+                      fontFamily: "Bold",
+                      color: FONT_COLOR,
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.start,
+                    /*  onChanged: (value) {
+                widget.onChangedInput;
+              },*/
+                    decoration: InputDecoration(
+                        prefixIcon: widget.prefixIcon,
+
+                        // ]),
+                        suffixIcon: widget.suffixIcon,
+                        contentPadding:
+                            const EdgeInsets.only(top: 35, bottom: 0),
+                        // border: InputBorder(),
+                        hintText: widget.hintText,
+                        hintStyle: const TextStyle(
+                            fontFamily: "Bold",
+                            color: FONT_COLOR,
+                            fontSize: 14))),
+              ),
       ],
     );
   }

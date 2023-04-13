@@ -59,96 +59,115 @@ class _HomeScreenState extends State<HomeScreen> {
         //   key: context.read<menuController>().scaffoldKey,
         drawer: SideMenu(),
         body: Container(
-      width: widht,
-      height: heigth,
-      child: Stack(
-        children: [
-          _affichePage,
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-                width: widht,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: GRAY_COLOR,
-                ),
+          width: widht,
+          height: heigth,
+          child: Stack(
+            children: [
+              _affichePage,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                    width: widht,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: GRAY_COLOR,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: widht * 0.1, right: widht * 0.1),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            onPressed: () => _change(0),
+                            icon: Icon(
+                              Icons.map_outlined,
+                              size: 40,
+                              color: this.one
+                                  ? FONT_COLOR
+                                  : Color.fromRGBO(229, 229, 229, 1),
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () => _change(2),
+                              icon: Icon(
+                                Icons.favorite_outline,
+                                size: 40,
+                                color: this.two
+                                    ? FONT_COLOR
+                                    : Color.fromRGBO(229, 229, 229, 1),
+                              ))
+                        ],
+                      ),
+                    )),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
                 child: Padding(
-                  padding:
-                      EdgeInsets.only(left: widht * 0.1, right: widht * 0.1),
+                  padding: EdgeInsets.only(bottom: 70, right: 16),
+                  child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Save_passager()));
+                      },
+                      child: Card(
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: const CircleAvatar(
+                          radius: 40,
+                          backgroundColor: PRIMARY_COLOR,
+                          backgroundImage: AssetImage(
+                            'assets/images/image 36.png',
+                          ),
+                        ),
+                      )),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 55, right: 14),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                          onPressed: () => _change(0),
-                          icon: Icon(
-                            Icons.map_outlined,
-                            size: 40,
-                            color: this.one
-                                ? FONT_COLOR
-                                : Color.fromRGBO(229, 229, 229, 1),
-                          ),),
-                      IconButton(
-                          onPressed: () => _change(2),
-                          icon: Icon(
-                            Icons.favorite_outline,
-                            size: 40,
-                            color: this.two
-                                ? FONT_COLOR
-                                : Color.fromRGBO(229, 229, 229, 1),
-                          ))
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: const [
+                      Text(
+                        "    Voyagez ici",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: PRIMARY_COLOR,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20),
+                      ),
                     ],
                   ),
-                )),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 70, right: 16),
-              child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Save_passager()));
-                  },
-                  child: Card(
-                    elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: const CircleAvatar(
-                      radius: 40,
-                      backgroundColor: PRIMARY_COLOR,
-                      backgroundImage: AssetImage(
-                        'assets/images/image 36.png',
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                    width: 80,
+                    height: 80,
+                    alignment: Alignment.topCenter,
+                    child: GestureDetector(
+                      onTap: () {
+                        _change(1);
+                      },
+                      child: CircleAvatar(
+                        radius: 35,
+                        backgroundColor: GRAY_COLOR,
+                        child: Icon(Icons.home,
+                            color: this.tree
+                                ? FONT_COLOR
+                                : Color.fromRGBO(229, 229, 229, 1),
+                            size: 40),
                       ),
-                    ),
-                  )),
-            ),
+                    )),
+              )
+            ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-                width: 80,
-                height: 80,
-                alignment: Alignment.topCenter,
-                child: GestureDetector(
-                  onTap: () {
-                    _change(1);
-                  },
-                  child: CircleAvatar(
-                    radius: 35,
-                    backgroundColor: GRAY_COLOR,
-                    child: Icon(Icons.home,
-                        color: this.tree
-                            ? FONT_COLOR
-                            : Color.fromRGBO(229, 229, 229, 1),
-                        size: 40),
-                  ),
-                )),
-          )
-        ],
-      ),
-    ));
+        ));
   }
 }

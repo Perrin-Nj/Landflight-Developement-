@@ -72,10 +72,10 @@ class _RegisterState extends State<Register> {
     var passNonNullValue = value ?? "";
     if (passNonNullValue.isEmpty) {
       return ("Mot de passe requis");
-    } else if (passNonNullValue.length < 5) {
-      return ("Le mot de passe doit dépasser 4 charactéres");
+    } else if (passNonNullValue.length < 8) {
+      return ("Le mot de passe doit dépasser 7 charactéres");
     } else if (!regex.hasMatch(passNonNullValue)) {
-      return ("Le mot de passe doit contenir des charactéres majuscules, minuscules, au moins un nombre et un charactére spécial ");
+      return ("Le mot de passe doit contenir des charactéres \n majuscules, minuscules, Doit contenir\n Au moins un nombre et, Un charactére spécial ");
     }
     return null;
   }
@@ -117,10 +117,11 @@ class _RegisterState extends State<Register> {
             child: Column(
               children: [
                 Input(
+                  isPassword: false,
                   inputController: nomController,
                   inputValidator: nomValidator,
-                 // onChangedInput: onChangeNom,
-                 // onTapInput: onTapNom,
+                  // onChangedInput: onChangeNom,
+                  // onTapInput: onTapNom,
                   isTel: false,
                   hintText: "Nom",
                   prefixIcon: Icon(Icons.person_outlined),
@@ -130,10 +131,11 @@ class _RegisterState extends State<Register> {
                   height: 32,
                 ),
                 Input(
+                    isPassword: false,
                     inputController: emailController,
                     inputValidator: validateEmail,
-                   // onChangedInput: onChangeEmail,
-                 //   onTapInput: onTapEmail,
+                    // onChangedInput: onChangeEmail,
+                    //   onTapInput: onTapEmail,
                     isTel: false,
                     hintText: "Email",
                     prefixIcon: Icon(Icons.mail_outline),
@@ -142,6 +144,7 @@ class _RegisterState extends State<Register> {
                   height: 32,
                 ),
                 Input(
+                    isPassword: true,
                     inputController: motdepasseController,
                     inputValidator: motdepasseValidator,
                     //onChangedInput: onChangeMotdepasse,
@@ -154,6 +157,9 @@ class _RegisterState extends State<Register> {
                   height: 32,
                 ),
                 InternationalPhoneNumberInput(
+                  isEnabled: true,
+                  hintText: "Numero de Téléphone",
+
                   validator: (value) {
                     return phoneValidator(value!);
                   },
@@ -164,19 +170,23 @@ class _RegisterState extends State<Register> {
                   onInputValidated: (bool value) {
                     print(value);
                   },
-                  selectorConfig: const SelectorConfig(
-                    //trailingSpace: false,
+                  selectorConfig: SelectorConfig(
+                    // set initial country code to Cameroon
                     leadingPadding: 8,
                     selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                   ),
                   ignoreBlank: false,
-                  autoValidateMode: AutovalidateMode.disabled,
+                  errorMessage:
+                      "Le numéro de téléphone ne corresponds pas au pays selectionné",
+                  autoValidateMode: AutovalidateMode.always,
                   selectorTextStyle: TextStyle(color: Colors.black),
 
                   //textFieldController: controller,
                   formatInput: false,
                   keyboardType: TextInputType.numberWithOptions(
-                      signed: true, decimal: true),
+                    signed: true,
+                    decimal: true,
+                  ),
                   // inputBorder: OutlineInputBorder(),
                   onSaved: (PhoneNumber number) {
                     print('On Saved: $number');
@@ -193,7 +203,7 @@ class _RegisterState extends State<Register> {
             onTap: () async {
               if (_formKeyRegister.currentState!.validate()) {
                 SmartDialog.showLoading(
-                  msg: "loading",
+                  msg: "chargement...",
                   useAnimation: true,
                 );
                 // If the form is valid, display a snackbar. In the real world,

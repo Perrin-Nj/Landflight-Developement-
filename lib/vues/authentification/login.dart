@@ -64,10 +64,10 @@ class _LoginState extends State<Login> {
       var passNonNullValue = value ?? "";
       if (passNonNullValue.isEmpty) {
         return ("Mot de passe requis");
-      } else if (passNonNullValue.length < 5) {
-        return ("Le mot de passe doit dépasser 4 caractéres");
+      } else if (passNonNullValue.length < 8) {
+        return ("Le mot de passe doit dépasser 7 caractéres");
       } else if (!regex.hasMatch(passNonNullValue)) {
-        return ("Le mot de passe doit contenir des charactéres majuscules, minuscules, au moins un nombre et un charactére spécial ");
+        return ("Le mot de passe doit contenir des charactéres \n majuscules, minuscules, Doit contenir\n Au moins un nombre et, Un charactére spécial ");
       }
       return null;
     }
@@ -94,6 +94,7 @@ class _LoginState extends State<Login> {
             child: Column(
               children: [
                 Input(
+                    isPassword: false,
                     // onTapInput: onTapNom,
                     inputValidator: nomValidator,
                     //onChangedInput: onChangeNom,
@@ -106,6 +107,7 @@ class _LoginState extends State<Login> {
                   height: 18,
                 ),
                 Input(
+                  isPassword: true,
                   //  onTapInput: onTapMotdepasse,
                   inputValidator: motdepasseValidator,
                   //onChangedInput: onChangeMotdepasse,

@@ -60,10 +60,14 @@ class CommentList extends StatelessWidget {
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('Close'),
+            child: const Text('Close'),
             onPressed: () {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => HomeScreen()));
+                
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(),
+                ),
+              );
             },
           ),
         ],
@@ -71,26 +75,3 @@ class CommentList extends StatelessWidget {
     );
   }
 }
-/* AlertDialog(
-          title: Text('Comments'),
-          content: Container(
-            width: double.maxFinite,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: commentList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(commentList[index]),
-                );
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/'),
-              child: Text('Close'),
-            ),
-          ],
-        );
-      },
-    ); */
