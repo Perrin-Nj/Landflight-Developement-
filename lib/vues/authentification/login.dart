@@ -29,6 +29,7 @@ class _LoginState extends State<Login> {
     // widget tree.
     motdepasseController.dispose();
     nomController.dispose();
+    _formKeyLogin.currentState?.dispose();
     super.dispose();
   }
 

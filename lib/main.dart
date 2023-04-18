@@ -82,7 +82,10 @@ class MyApp extends StatelessWidget {
                   );
                 } else {
                   //    SmartDialog.dismiss();
-                  return Login(); //ChoixLangue();
+                  return Login();
+
+                  ///HomeScreen();
+                  // //ChoixLangue();
                 }
               })),
     );

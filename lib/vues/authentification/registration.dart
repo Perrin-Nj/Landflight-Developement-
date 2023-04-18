@@ -34,6 +34,7 @@ class _RegisterState extends State<Register> {
     motdepasseController.dispose();
     nomController.dispose();
     emailController.dispose();
+    _formKeyRegister.currentState?.dispose();
     super.dispose();
   }
 

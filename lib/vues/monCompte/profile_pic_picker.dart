@@ -11,11 +11,17 @@ class ProfilePicPicker extends StatelessWidget {
   Function changePic;
   double scale;
   String baseImagePath = "assets/images/";
-  ProfilePicPicker(this.pic, this.changePic, {this.scale = 1, super.key});
+  double? maxWidth;
+  ProfilePicPicker(this.pic, this.changePic,
+      {this.scale = 1, this.maxWidth, super.key});
 
   @override
   Widget build(BuildContext context) {
     double width = getContextRatioWidth(context, 1 / 3);
+    if (maxWidth != null && maxWidth! < width) {
+      width = maxWidth!;
+    }
+
     return getPicWidget(context, width);
   }
 

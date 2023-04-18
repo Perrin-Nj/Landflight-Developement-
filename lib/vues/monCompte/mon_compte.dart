@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:landflight/vues/monCompte/profile_pic_picker.dart';
 
@@ -25,9 +27,9 @@ class _MonCompteState extends State<MonCompte> {
     double height = MediaQuery.of(context).size.height;
     double bottomSheetHeight = 70;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Container(
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+            child: Container(
           height: height,
           width: width,
           child: Column(
@@ -36,21 +38,19 @@ class _MonCompteState extends State<MonCompte> {
               Column(
                 children: [
                   getHeader(width, height),
-                  const SizedBox(
+                  SizedBox(
                     height: 60,
                   ),
-                  getButtons(),
-                  Padding(padding: EdgeInsets.only(bottom: bottomSheetHeight))
+                  getButtons(context),
                 ],
               ),
               getBottomMenu(width, bottomSheetHeight)
             ],
           ),
-        ),
+        )
 
-        // bottomSheet: getBottomMenu(width, bottomSheetHeight),
-      ),
-    );
+            // bottomSheet: getBottomMenu(width, bottomSheetHeight),
+            ));
   }
 
   changePic(XFile newPic) {
@@ -68,8 +68,7 @@ class _MonCompteState extends State<MonCompte> {
   Widget getHeader(double width, double height) {
     return Container(
       width: width,
-      height: height * 0.25,
-      padding: EdgeInsets.only(top: 35),
+      height: height * 0.26,
       decoration: BoxDecoration(
           color: Color(0xff071c91),
           borderRadius: BorderRadius.only(
@@ -77,20 +76,26 @@ class _MonCompteState extends State<MonCompte> {
               bottomRight: Radius.circular(60))),
       child: Column(
         children: [
-          getHeaderButtons(),
           SizedBox(
-            height: 25,
+            height: 35,
           ),
-          getProfileInfo(width)
+          getLowerMenuItems(width),
         ],
       ),
+    );
+  }
+
+  Widget getLowerMenuItems(double width) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [getHeaderButtons(), getProfileInfo(width)],
     );
   }
 
   Widget getProfileInfo(double width) {
     return Container(
       child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-        getProfilePicPickerAndNameFields(width),
+        getProfilePicPickerAndNameFields(width, maxWidth: 100),
         SizedBox(
           width: 20,
         ),
@@ -102,9 +107,9 @@ class _MonCompteState extends State<MonCompte> {
     );
   }
 
-  Widget getProfilePicPickerAndNameFields(double width) {
+  Widget getProfilePicPickerAndNameFields(double width, {double? maxWidth}) {
     return Row(children: [
-      getProfilePicPicker(),
+      getProfilePicPicker(maxWidth: maxWidth),
       SizedBox(
         width: 10,
       ),
@@ -112,10 +117,10 @@ class _MonCompteState extends State<MonCompte> {
     ]);
   }
 
-  Widget getProfilePicPicker() {
+  Widget getProfilePicPicker({double? maxWidth}) {
     return ProfilePicPicker(profilePic, scale: 0.3, (newPic) {
       changePic(newPic);
-    });
+    }, maxWidth: maxWidth);
   }
 
   Widget getNameField(double width) {
@@ -168,16 +173,20 @@ class _MonCompteState extends State<MonCompte> {
         ));
   }
 
-  Widget getButtons() {
-    return Container(
-      child: Column(children: [
+  Widget getButtons(BuildContext context) {
+    return SafeArea(
+        child: Container(
+      height: MediaQuery.of(context).size.height * 0.5,
+      alignment: Alignment.center,
+      child:
+          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         getChangePhoneButton(),
         getChangeLanguageButton(),
         getChangePaiementMethodButton(),
         getChangeCommandFormButton(),
         getLogoutButton()
       ]),
-    );
+    ));
   }
 
   Widget getChangePhoneButton() {
@@ -210,7 +219,7 @@ class _MonCompteState extends State<MonCompte> {
         }
       },
       child: Container(
-          margin: EdgeInsets.only(left: 50, bottom: 20, top: 20),
+          margin: EdgeInsets.only(left: 50),
           child: Row(
             children: [
               Icon(
@@ -221,10 +230,11 @@ class _MonCompteState extends State<MonCompte> {
               SizedBox(
                 width: 20,
               ),
-              Text(
+              Expanded(
+                  child: Text(
                 text,
                 style: TextStyle(fontSize: 16),
-              )
+              ))
             ],
           )),
     );

@@ -14,6 +14,7 @@ import 'package:async/async.dart';
 
 import '../../models/post.dart';
 import '../../models/post.dart';
+import 'side_menu.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _HomePageState extends State<HomePage> {
       .collection('agence')
       .doc('EbquQrjbwDD2maaK1gwo')
       .snapshots() as Stream<QuerySnapshot<Object?>>;*/
-
+ final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     final heigth = MediaQuery.of(context).size.height;
@@ -41,6 +42,10 @@ class _HomePageState extends State<HomePage> {
     final search = context.watch<SearchController>();
 
     return Scaffold(
+      key: scaffoldKey, // context.read<menuController>().scaffoldKey,
+      drawer: const Drawer(
+        child: SideMenu(),
+      ),
       body: SafeArea(
           child: Container(
         width: widht,
@@ -56,13 +61,19 @@ class _HomePageState extends State<HomePage> {
                   height: 50,
                   width: widht,
                   decoration: const BoxDecoration(
-                      color: PRIMARY_COLOR,
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20),
-                          bottomRight: Radius.circular(20))),
+                    color: PRIMARY_COLOR,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(
+                        20,
+                      ),
+                    ),
+                  ),
                   child: IconButton(
+                      key: GlobalKey<_HomePageState>(),
                       onPressed: () {
-                        //  context.read<menuController>().controlMenu();
+                        //context.read<menuController>().controlMenu();
+                          scaffoldKey.currentState!.openDrawer();
                       },
                       icon: const Icon(
                         Icons.menu,
@@ -236,6 +247,7 @@ class _HomePageState extends State<HomePage> {
                             //final datePost = data['datePost'] as String;
 
                             return StreamBuilder<DocumentSnapshot>(
+                              key: ValueKey(index),
                               stream: FirebaseFirestore.instance
                                   .collection('agence')
                                   .doc(DocAgenceId.trim())
